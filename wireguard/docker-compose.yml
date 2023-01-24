@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+  wireguard:
+    image: ghcr.io/linuxserver/wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=$app_tz
+      - SERVERURL=$app_fqdn
+      - SERVERPORT=$app_port
+      - PEERS=$wg_peers
+      - PEERDNS=$wg_peerdns
+      - INTERNAL_SUBNET=$wg_internal_subnet
+      - ALLOWEDIPS=$wg_allowed_ips
+    volumes:
+      - $app_dir_conf:/config
+      - /lib/modules:/lib/modules
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+

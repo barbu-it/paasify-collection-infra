@@ -1,0 +1,30 @@
+version: '3.4'
+
+  # https://hub.docker.com/r/dperson/samba
+
+services:
+  samba:
+    image: dperson/samba:latest
+    mem_limit: 512m
+    volumes:
+      - $app_dir_conf:/etc/samba
+      - $app_dir_logs:/var/log/samba
+      #- $app_dir_data:/mnt
+
+        #- /usr/share/samba:/usr/share/samba
+        #- /srv/nas/Public:/srv/nas/Public
+        #- /var/lib/samba:/var/lib/samba
+        #- /etc/shadow:/etc/shadow:ro
+        #- /etc/passwd:/etc/passwd:ro
+    environment:
+      - TZ=$app_tz
+      - NMBD=false
+      - WORKGROUP=WORKGROUP
+
+      # Default user ID for smbuser
+      - USERID=999
+      - GROUPID=999
+
+      # Bug here: we can't use uid 1000
+      #- USERID=$app_puid
+      #- GROUPID=$app_pgid

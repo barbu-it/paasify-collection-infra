@@ -1,0 +1,33 @@
+version: '3.7'
+
+networks:
+  prometheus:
+    name: $net_prometheus
+
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+      #hostname: cadvisor
+      #
+    command:
+      - /usr/bin/cadvisor
+      - "--disable_metrics=percpu,sched,tcp,udp,disk,diskIO,accelerator,hugetlb,referenced_memory,cpu_topology,resctrl"
+    volumes:
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /sys:/sys:ro
+      - /var/run:/var/run:ro
+      - /:/rootfs:ro
+      - /sys/fs/cgroup:/cgroup:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /etc/localtime:/etc/localtime:ro
+
+        #ports:
+        #  - 8080:8080
+    networks:
+      prometheus:
+        aliases:
+          - cadvisor.prom
+
+        #deploy:
+        #  mode: global

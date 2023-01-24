@@ -1,0 +1,19 @@
+version: "3.7"
+
+networks:
+  lan:
+services:
+  avahi:
+    image: flungo/avahi
+    volumes:
+      - $app_dir_conf/hosts:/etc/avahi/hosts
+      - $app_dir_conf/services:/etc/avahi/services
+    # See: https://linux.die.net/man/5/avahi-daemon.conf
+    # See: https://hub.docker.com/r/flungo/avahi
+    environment:
+      SERVER_HOST_NAME: mdns
+        #SERVER_HOST_NAME: $app_fqdn
+        #SERVER_DOMAIN_NAME: faketest
+    networks:
+      lan:
+

@@ -1,0 +1,37 @@
+x-info:
+  client:
+    - accesskey=<accesskey>
+    - secret=<secret>
+    - MC_HOSTS_minio=http://$accesskey:$secret@$app_fqdn
+    - mc config host add local $app_prot://$app_fqdn $accesskey $secret
+    - mc local ls
+
+networks:
+  default:
+    name: ${net_ostorage:-s3}
+
+
+services:
+  client:
+    image: minio/mc:latest
+    command: server --console-address ":9001" /data
+    volumes:
+      - $app_dir_root:/app_root
+      - $app_dir_data/debug:/root/
+    environment:
+      - MINIO_ROOT_USER=$app_admin_user
+      - MINIO_ROOT_PASSWORD=$app_admin_pass
+      
+      # Why this does not work ?
+      #- MINIO_SERVER_URL=${app_prot}://minio.$app_domain
+      - MINIO_SERVER_URL=${app_prot}://minio:9000
+
+      - MINIO_DOMAIN=minio.$app_domain
+      - MINIO_BROWSER_REDIRECT_URL=${app_prot}://minio-console.$app_domain
+
+      #MC_HOSTS_minio=http://<accesskey>:<secret>@$app_fqdn 
+      - accesskey=<accesskey>
+      - secret=<secret>
+      - MC_HOSTS_local=http://$accesskey:$secret@$app_fqdn
+      - HELP_CMD=mc config host add local https://$app_fqdn $accesskey $secret
+

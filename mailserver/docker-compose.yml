@@ -1,0 +1,51 @@
+
+x-setup:
+  setup:
+    - docker exec -ti ${app_ns}_${app_name}-${app_name}1 setup email add <user>@$app_domain
+
+
+services:
+  mailserver:
+    image: docker.io/mailserver/docker-mailserver:latest
+    # If the FQDN for your mail-server is only two labels (eg: example.com),
+    # you can assign this entirely to `hostname` and remove `domainname`.
+    hostname: mail
+    domainname: $app_domain
+    environment:
+      POSTMASTER_ADDRESS: $app_admin_email
+      ENABLE_UPDATE_CHECK: 0
+      UPDATE_CHECK_INTERVAL: 1d
+      PERMIT_DOCKER: none  # connected-networks ?
+      TZ: $app_tz
+      TLS_LEVEL: modern
+      SPOOF_PROTECTION: 1
+        #ENABLE_POP3
+        #ENABLE_CLAMAV
+        #ENABLE_RSPAMD
+        #ENABLE_AMAVIS
+        #ENABLE_DNSBL
+        #ENABLE_MANAGESIEVE
+      ENABLE_FAIL2BAN: true
+      FAIL2BAN_BLOCKTYPE: reject  # reject/drop
+
+      SSL_TYPE: letsencrypt
+      POSTFIX_MAILBOX_SIZE_LIMIT: 5000
+      ENABLE_QUOTAS: 1
+      LOGWATCH_INTERVAL: weekly
+      LOGROTATE_INTERVAL: weekly
+    env_file: $app_dir_template/mailserver.env
+    volumes:
+      - $app_dir_data:/var/mail/
+      - $app_dir_state:/var/mail-state/
+      - $app_dir_logs:/var/log/mail/
+      - $app_dir_conf:/tmp/docker-mailserver/
+        # TOFIX NOT GOOD
+      - /etc/localtime:/etc/localtime:ro
+    restart: always
+    stop_grace_period: 1m
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: "ss --listening --tcp | grep -P 'LISTEN.+:smtp' || exit 1"
+      timeout: 3s
+      retries: 0

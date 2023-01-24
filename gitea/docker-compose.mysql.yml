@@ -1,0 +1,40 @@
+
+networks:
+  db:
+
+services:
+  gitea:
+    environment:
+      - GITEA__database__DB_TYPE=mysql
+      - GITEA__database__HOST=mysql
+      - GITEA__database__NAME=${app_db_name}
+      - GITEA__database__USER=${app_db_user}
+      - GITEA__database__PASSWD=${app_db_pass}
+    networks:
+      db:
+
+  mysql:
+    image: $img_mariadb10_name:$img_mariadb10_version
+    restart: unless-stopped
+    volumes:
+      - $app_dir_db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${app_admin_pass}"
+      MYSQL_DATABASE: "${app_db_name}"
+      MYSQL_USER: "${app_db_user}"
+      MYSQL_PASSWORD: "${app_db_pass}"
+
+    labels:
+      restic-compose-backup.mysql: 'true'
+
+    networks:
+      db:
+
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_db_data
+

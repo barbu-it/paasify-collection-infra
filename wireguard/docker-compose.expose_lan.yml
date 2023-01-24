@@ -1,0 +1,14 @@
+version: "3.3"
+# ToDo Add MACVLAN build here. MACVLAN Network is created outside of this configuration currently
+networks:
+  vlan99:
+    external: true
+
+services:
+  wireguard:
+    networks:
+      vlan99:
+        ipv4_address: 10.6.1.12
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+

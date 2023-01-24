@@ -1,0 +1,122 @@
+version: '3.9'
+
+networks:
+  default:
+
+services:
+  gitea:
+    image: gitea/gitea:${GITEA_VERSION:-1.16}
+    environment:
+      # https://docs.gitea.io/en-us/config-cheat-sheet/
+      # https://docs.gitea.io/en-us/install-with-docker/#environments-variables
+      - APP_NAME=$app_description
+      - USER_UID=$app_puid
+      - USER_GID=$app_pgid
+      - RUN_MODE=prod
+
+      - GITEA__server__DOMAIN=$app_fqdn
+      - GITEA__server__SSH_DOMAIN=$app_fqdn
+      - GITEA__server__ROOT_URL=https://$app_fqdn
+    labels:
+      restic-compose-backup.volumes: true
+      restic-compose-backup.volumes.include: "data_repos,data_ssh,data_var"
+
+    networks:
+      default:
+    volumes:
+      - data_var:/data/gitea:rw
+      - data_repos:/data/git:rw
+      - data_ssh:/data/ssh:rw
+
+volumes:
+  data_repos:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_data/git
+  data_ssh:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_data/ssh
+  data_var:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_data/gitea
+
+
+
+
+      # V1 mono
+      #- data_gitea:/data/gitea
+      #- type: volume
+      #  source: data_gitea
+      #  target: /data/gitea
+      #  #bind:
+      #  #  create_host_path: true
+
+      #- type: volume
+      #  source: data_var
+      #  target: /data/gitea
+      #- type: volume
+      #  source: data_repos
+      #  target: /data/git
+      #- type: volume
+      #  source: data_ssh
+      #  target: /data/ssh
+
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
+
+
+
+# Example: https://stackoverflow.com/questions/49950326/how-to-create-docker-volume-device-host-path
+# https://docs.docker.com/compose/compose-file/#volumes
+#
+#volumes:
+#  data_repos:
+#  data_ssh:
+#  data_var:
+
+  #data_gitea:
+  #  driver: local
+  #  driver_opts:
+  #    type: none
+  #    o: bind
+  #    device: $app_dir_data/data_gitea
+
+
+
+
+
+
+
+
+
+# Pre build cmd: All direcotries must exists for local volumes
+# yq -r '.volumes | keys[] as $key| "mkdir -p " + .[$key].driver_opts.device ' docker-compose.run.yml
+#
+
+
+# mkdir -p $PWD/gitea/data/data_gitea
+# yq -r '.volumes | keys[] as $key| "docker volume create -d " + .[$key].driver + " -o type="  + .[$key].driver_opts.o +  " -o device=" + .[$key].driver_opts.device  + " devbox_gitea_" + $key ' docker-compose.run.yml
+#  => docker volume create -d local -o type=bind -o device=./data/var devbox_gitea_data_gitea
+
+
+
+
+
+# Volume prior init:
+# for x in $(yq -r  '.volumes[] | if .driver == "local" then .driver_opts.device else "titi" end'   docker-compose.run.yml ); do mkdir -p "$x" ; done 
+# PREFIX=devbox_gitea for x in $(yq -r  '.volumes[] | if .driver == "local" then .driver_opts.device else "titi" end'   docker-compose.run.yml ); do mkdir -p "$x" ; done 
+#
+#
+#
+#     --mount 'type=volume,src=<VOLUME-NAME>,dst=<CONTAINER-PATH>,volume-driver=local,volume-opt=type=nfs,volume-opt=device=<nfs-server>:<nfs-path>,"volume-opt=o=addr=<nfs-address>,vers=4,soft,timeo=180,bg,tcp,rw"'
+#
+#     docker volume create -d local -o type=bind -o "device=$x" my-vol
+#     docker volume create -d local -o type=bind -o "device=$x" my-vol

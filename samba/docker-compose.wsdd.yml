@@ -1,0 +1,14 @@
+
+services:
+  wsdd:
+    image: jonasped/wsdd
+    command: python wsdd.py -v -n HELLOWORLD -w WORKGROUP --ipv4only -i enp1s0
+      #environment:
+      #  - HOSTNAME=HELLO
+
+    network_mode: "host"
+      #ports:
+      #  - 3702:3702:udp    # WSD discovery, UDP only here
+      #  - 5357:5357:tcp    # wsdapi, tcp/udp
+      #  - 5359:5359        # Ms Alerter, tcp/udp, not used
+

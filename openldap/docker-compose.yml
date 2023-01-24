@@ -1,0 +1,45 @@
+version: "3.9"
+
+networks:
+  ldap:
+    name: ${app_network_name:-ldap}
+
+services:
+  openldap:
+    image: ${app_image_name:-osixia/openldap}:${app_image_version:-1.5.0}
+    restart: always
+    networks:
+      ldap:
+        aliases:
+          - openldap
+          - openldap.ldap
+          - $ldap_host.ldap
+    environment:
+      - "LDAP_ORGANISATION=${ldap_org:-$app_description}"
+      - "LDAP_DOMAIN=${ldap_domain:-$app_fqdn}"
+
+      - "LDAP_RFC2307BIS_SCHEMA=true"
+      - "LDAP_REMOVE_CONFIG_AFTER_SETUP=true"
+
+      - "LDAP_TLS_VERIFY_CLIENT=never"
+      - "LDAP_TLS=${ldap_tls:-false}"
+
+
+      - "LDAP_ADMIN_PASSWORD=${ldap_admin_bind_pass:-$app_admin_pass}"
+      - "LDAP_CONFIG_PASSWORD=${ldap_config_bind_pass:-$app_admin_pass}"
+
+      - "LDAP_READONLY_USER_USERNAME=$app_readonly_login"
+      - "LDAP_READONLY_USER_PASSWORD=$app_readonly_pass"
+
+      - "LDAP_SEED_INTERNAL_LDIF_PATH=/etc/ldap/slapd.d/import_ldif"
+        #- "LDAP_SEED_INTERNAL_SCHEMA_PATH=/etc/ldap/slapd.d/import_schema"
+
+      # Helpers fro client:
+      # ldapsearch -x -D "$CLIENT_BIND_DN" -w "$LDAP_ADMIN_PASSWORD" -b "ou=groups,$CLIENT_BASE_DN"
+      - "CLIENT_BASE_DN=$ldap_base_dn"
+      - "CLIENT_BIND_DN=$ldap_admin_bind_dn"
+
+    volumes:
+      - $app_dir_conf:/etc/ldap/slapd.d
+      - $app_dir_data:/var/lib/ldap
+

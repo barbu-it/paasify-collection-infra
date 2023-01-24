@@ -1,0 +1,11 @@
+---
+services:
+  # See: https://goauthentik.io/docs/installation/configuration#authentik_log_level
+  server:
+    environment:
+      #AUTHENTIK_LOG_LEVEL: debug
+      AUTHENTIK_LOG_LEVEL: trace
+        #worker:
+        #  environment:
+        #    AUTHENTIK_LOG_LEVEL: debug
+        #      # AUTHENTIK_LOG_LEVEL: trace

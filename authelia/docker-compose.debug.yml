@@ -1,0 +1,6 @@
+
+services:
+  authelia:
+    environment:
+      - AUTHELIA_LOG_LEVEL=debug
+

@@ -1,0 +1,21 @@
+version: '3.9'
+
+
+services:
+  gitea:
+    image: gitea/gitea:${GITEA_VERSION:-1.16}
+    restart: unless-stopped
+    environment:
+      #- GITEA__oauth2_ENABLE: true
+      #- GITEA__oauth2_client__ENABLE_AUTO_REGISTRATION=true
+      #- GITEA__oauth2_client__OPENID_CONNECT_SCOPES=openid email profile
+      #- GITEA__oauth2_client__ACCOUNT_LINKING=login
+
+      # https://docs.gitea.io/en-us/config-cheat-sheet/#oauth2-client-oauth2_client
+      - GITEA__oauth2_client__REGISTER_EMAIL_CONFIRM=false
+      - GITEA__oauth2_client__OPENID_CONNECT_SCOPES=nickname profile email openid
+      - GITEA__oauth2_client__ENABLE_AUTO_REGISTRATION=true   # Automatically create user accounts for new oauth2 users
+      - GITEA__oauth2_client__USERNAME=userid
+      - GITEA__oauth2_client__UPDATE_AVATAR=False
+      - GITEA__oauth2_client__ACCOUNT_LINKING=login  # disabled|login|auto
+

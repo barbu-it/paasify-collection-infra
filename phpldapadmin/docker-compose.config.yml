@@ -1,0 +1,24 @@
+
+services:
+  phpldapadmin:
+    environment:
+      TEMPLATE_OVERRIDE: 'true'
+      TEMPLATE_SRC: /container/service/phpldapadmin/assets/config/ldap_templates
+      
+    volumes:
+
+      # Import whole config elements
+      - ${app_dir_root}/conf:/container/service/phpldapadmin/assets/config/
+
+      # Template installation
+      - ${app_dir_root}/hacks/phpldapadmin-additional-templates/:/container/service/phpldapadmin-additional-templates/
+
+      # Keep user sessions
+      # Must be writable by 33:33 !!!
+      - ${app_dir_cache}:/var/lib/php/sessions
+
+         #- ${app_dir_root}/hacks/finish.sh:/container/service/phpldapadmin/process.sh
+         #- ${app_dir_root}/hacks/service_conf:/container/service/zz_final
+          
+        # BROKEN
+         #- ${app_dir_root}/templates:/var/www/phpldapadmin_bootstrap/templates:ro

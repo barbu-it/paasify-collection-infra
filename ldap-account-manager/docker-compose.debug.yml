@@ -1,0 +1,10 @@
+
+
+services:
+    lam:
+      environment:
+        # Probably does not work, need to find correct var names
+        - LDAP_DEBUG=true
+        - LDAP_VERBOSE_CONNECTION_LOGS=true
+        - SESSION_DEBUG=true
+        - SMTP_LOG_LEVEL=4

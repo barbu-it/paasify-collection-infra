@@ -1,0 +1,5 @@
+services:
+  gaia:
+    ports: 
+      - "$app_expose_ip:$app_expose_port:8080"
+

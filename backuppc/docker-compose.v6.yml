@@ -1,0 +1,26 @@
+---
+version: "3.9"
+
+services:
+  backuppc:
+    image: tiredofit/backuppc:6.0.1 # BROKEN ! https://github.com/tiredofit/docker-backuppc/issues/15
+    environment:
+      - CONTAINER_NAME=backuppc-app
+      - USER_BACKUPPC=$app_puid
+      - GROUP_BACKUPPC=$app_pgid
+
+        #- NGINX_AUTHENTICATION_TYPE=BASIC
+        #- NGINX_AUTHENTICATION_BASIC_USER1=backuppc
+        #- NGINX_AUTHENTICATION_BASIC_PASS1=backuppc
+        #- DEBUG_MODE=FALSE
+        #- DEBUG_MODE=TRUE
+
+      - TZ=$app_tz
+    working_dir: /data/
+    volumes:
+      - $app_dir_conf/etc:/etc/backuppc
+      - $app_dir_conf/ssh:/home/backuppc/.ssh
+      - $app_dir_data:/var/lib/backuppc
+      - $app_dir_logs:/www/logs
+
+    restart: unless-stopped

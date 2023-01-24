@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+    <name replace-wildcards="yes">files.domain</name>
+    <service>
+      <type>_smb._tcp</type>
+      <port>139</port>
+      <host-name>files.local</host-name>
+      <txt-record>model=Samba server</txt-record>
+   </service>
+   <service>
+      <type>_device-info._tcp</type>
+      <port>0</port>
+      <txt-record>model=Docker</txt-record>
+      <host-name>files.local</host-name>
+   </service>
+</service-group>
+

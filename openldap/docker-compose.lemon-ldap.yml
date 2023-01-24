@@ -1,0 +1,36 @@
+
+
+
+
+
+services:
+
+  lemon:
+    image: coudot/lemonldap-ng:2.0.14
+    restart: always
+
+    volumes:
+      - ./lemonldap-etc/:/etc/lemonldap-ng
+      - ./lemonldap-conf/:/var/lib/lemonldap-ng/conf
+        #- ./lemonldap-psessions/:/var/lib/lemonldap-ng/psessions
+        #- ./lemonldap-sessions/:/var/lib/lemonldap-ng/sessions
+      - ./lemonldap-logs:/var/log/nginx
+
+    environment:
+      - SSODOMAIN=$app_domain
+      - PORTAL_HOSTNAME=auth.$app_domain
+      - MANAGER_HOSTNAME=lemon.$app_domain
+      - HANDLER_HOSTNAME=handler.$app_domain
+      - TEST1_HOSTNAME=mytest1.$app_domain
+      - TEST2_HOSTNAME=mytest2.$app_domain
+      - LOGLEVEL=debug
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.lemon.entrypoints: front-http,front-https
+        #traefik.http.routers.lemon.rule: Host(`(auth|lemon|handler).$app_domain`)
+      traefik.http.routers.lemon.rule: Host(`auth.$app_domain`,`lemon.$app_domain`,`handler.$app_domain`)
+        #traefik.http.routers.lemon.rule: Host(`lemon.$app_domain`)
+      traefik.http.routers.lemon.service: lemon
+      traefik.http.routers.lemon.tls: "true"
+      traefik.http.routers.lemon.tls.certresolver: $traefik_svc_certresolver
+      traefik.http.services.lemon.loadbalancer.server.port: '80'

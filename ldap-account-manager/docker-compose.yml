@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+
+  lam:
+    image: ${app_image_name:-ldapaccountmanager/lam}:${app_image_version:-8.1}
+    #ports:
+    #  - "9999:80"
+
+    volumes:
+      ###- $app_dir_conf:/etc/ldap-account-manager
+      - $app_dir_conf:/var/lib/ldap-account-manager/config
+      - $app_dir_data/sess:/var/lib/ldap-account-manager/sess
+
+    # Doc: https://github.com/LDAPAccountManager/lam/blob/develop/lam-packaging/docker/.env
+    environment:
+      - LAM_SKIP_PRECONFIGURE=false
+      - LDAP_DOMAIN=${ldap_domain}
+      - LDAP_BASE_DN=${ldap_base_dn}
+
+      - LAM_LANG=${app_lang}
+
+      - LDAP_SERVER=${ldap_uri_server}
+      - LAM_PASSWORD=${app_admin_pass} # This is a app password, not ldap
+      #- LAM_PASSWORD=${ldap_admin_bind_pass} # Not this is not related to LDAP passowrd, just an internal password
+      # This is only used for editing app profiles and settings
+
+      - ADMIN_USER=${ldap_admin_bind_dn}
+

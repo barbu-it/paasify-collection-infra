@@ -1,0 +1,4 @@
+services:
+  vault-server:
+    ports:
+      - "${app_expose_ip}:${app_expose_port:-8200}:${app_port:-8200}"

@@ -1,0 +1,10 @@
+
+# Documentation: https://github.com/wheelybird/ldap-user-manager
+
+# Traefik config
+traefik_svc_key: lam
+traefik_svc_ident: lam
+traefik_svc_port: 80
+
+app_image_name: ldapaccountmanager/lam
+app_image_version: '8.1'

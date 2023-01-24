@@ -1,0 +1,34 @@
+
+networks:
+  front:
+    external: true
+    name: ${net_proxy:-traefik}
+
+services:
+  minio:
+    networks:
+      front:
+      default:
+    environment:
+     - MINIO_DOMAIN=minio.$app_domain
+     - MINIO_SERVER_URL=https://minio.$app_domain
+     - MINIO_BROWSER_REDIRECT_URL=https://minio-console.$app_domain
+
+    labels:
+     - "traefik.enable=true"
+
+     # Console
+     - "traefik.http.routers.minio-console.rule=Host(`minio-console.$app_domain`)"
+     - "traefik.http.routers.minio-console.entrypoints=front-https"
+     - "traefik.http.routers.minio-console.tls=true"
+     - "traefik.http.routers.minio-console.tls.certresolver=${traefik_svc_certresolver:-}"
+     - "traefik.http.routers.minio-console.service=minio-console"
+     - "traefik.http.services.minio-console.loadbalancer.server.port=9001"
+
+     # APi
+     - "traefik.http.routers.minio.rule=Host(`minio.$app_domain`)"
+     - "traefik.http.routers.minio.entrypoints=front-https"
+     - "traefik.http.routers.minio.tls=true"
+     - "traefik.http.routers.minio.tls.certresolver=${traefik_svc_certresolver:-}"
+     - "traefik.http.routers.minio.service=minio"
+     - "traefik.http.services.minio.loadbalancer.server.port=9000"

@@ -1,0 +1,48 @@
+version: "3.9"
+
+
+# Official docuemtnation
+# https://min.io/docs/minio/container/index.html
+
+# See: https://github.com/minio/minio/blob/master/dockerscripts/docker-entrypoint.sh
+# MINIO_USERNAME=minio
+# MINIO_GROUPNAME=minio
+# MINIO_UID=$app_puid
+# MINIO_GID=$app_pgid
+#
+# Mendatory ?
+# MINIO_ACCESS_KEY
+# MINIO_SECRET_KEY
+
+networks:
+  s3:
+    name: ${app_network_name:-s3}
+
+services:
+  minio:
+    image: ${app_image}:${app_image_version}
+    command: server --address ":9000" --console-address ":9001" /data
+    networks:
+      s3:
+        aliases:
+          - minio
+          - s3
+    volumes:
+      - $app_dir_data:/data
+      - $app_dir_conf:/root/.minio
+      #  MINIO_CONFIG_ENV_FILE instead ?
+      
+    environment:
+      # See: https://min.io/docs/minio/linux/reference/minio-server/minio-server.html#minio-server-environment-variables
+
+      # Credentials
+      MINIO_ROOT_USER: $app_admin_user
+      MINIO_ROOT_PASSWORD: $app_admin_pass
+      
+      # Console
+      MINIO_BROWSER: on
+      MINIO_SERVER_URL: http://minio:9000
+      MINIO_BROWSER_REDIRECT_URL: ${app_prot}://$app_adm_name.$app_domain
+
+
+

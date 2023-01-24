@@ -1,0 +1,15 @@
+
+networks:
+  ldap:
+    external: true
+    name: $net_ldap
+
+services:
+  authelia:
+    command:
+      - authelia
+      - "--config=/config/configuration.yml"
+      - "--config=/config/configuration.ldap.yml"
+      - "--config=/config/configuration.local.yml"
+    networks:
+      ldap:

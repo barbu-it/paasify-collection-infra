@@ -1,0 +1,28 @@
+
+services:
+  gitea:
+    volumes:
+      - data_var:/data/gitea:rw
+      - data_repos:/data/git:rw
+      - data_ssh:/data/ssh:rw
+
+volumes:
+  data_repos:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_data/git
+  data_ssh:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_data/ssh
+  data_var:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $app_dir_data/gitea
+

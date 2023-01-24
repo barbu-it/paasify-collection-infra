@@ -1,0 +1,31 @@
+
+networks:
+  ldap:
+    name: ${net_ldap:-ldap}
+    external: true
+
+services:
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    #command: --loglevel debug --copy-service
+    volumes:
+#      - $app_dir_conf:/config
+      - $app_dir_logs:/var/log/apache2
+      - $app_dir_template/patch/default.startup.yaml:/container/environment/99-default/default.startup.yaml
+    networks:
+      ldap:
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "$ldap_host"
+
+      PHPLDAPADMIN_HTTPS: "false"
+      # PHPLDAPADMIN_TRUST_PROXY_SSL: 
+
+      PHPLDAPADMIN_SERVER_ADMIN: "$app_admin_email"
+        
+      #      PHPLDAPADMIN_LDAP_HOSTS: |2
+      #        - openldap.ldap:
+      #          - server:
+      #            - tls: false
+      #          - login:
+      #            - bind_id: cn=admin,dc=example,dc=org
+      #            - bind_pass: passw0rd

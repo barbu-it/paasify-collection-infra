@@ -1,0 +1,12 @@
+
+# Image documentation: https://github.com/osixia/docker-openldap
+
+app_network_name: ${net_ldap}
+app_image_name: osixia/openldap
+app_image_version: 1.5.0
+
+
+app_description: "OpenLDAP"
+
+# LDAP Admin Password
+ldap_admin_bind_pass: CHANGEME

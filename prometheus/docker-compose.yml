@@ -1,0 +1,25 @@
+version: '3.7'
+
+networks:
+  prometheus:
+    name: $net_prometheus
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.36.2
+    volumes:
+      - $app_dir_conf:/etc/prometheus/
+      - $app_dir_data:/prometheus
+    command:
+      - '--storage.tsdb.retention.time=1y'
+      - '--storage.tsdb.retention.size=10GB'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      prometheus:
+        aliases:
+          - prometheus.prom
+

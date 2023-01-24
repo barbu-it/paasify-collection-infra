@@ -1,0 +1,10 @@
+
+# Image documentation: https://github.com/osixia/docker-openldap
+
+app_network_name: ${net_ldap}
+app_image_name: osixia/phpldapadmin
+app_image_version: 0.9.0
+
+traefik_svc_port: 80
+
+app_description: "LDAP Admin"

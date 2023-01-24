@@ -1,0 +1,6 @@
+version: "3.8"
+services:
+  ipinfo:
+    image: peterdavehello/ipinfo.tw:latest
+    volumes:
+      - $app_dir_logs:/var/log/nginx

@@ -1,0 +1,22 @@
+---
+# version: '3'
+
+networks:
+  consul:
+    name: ${net_consul:-consul}
+
+services:
+
+  consul:
+    image: consul:1.10
+    hostname: consul
+    command: "agent -server -bootstrap-expect 1 -ui -client 0.0.0.0"
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    networks:
+      consul:
+        aliases:
+          - consul
+    volumes:
+      - $app_dir_data/server1:/consul/data
+

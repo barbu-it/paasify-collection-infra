@@ -1,0 +1,5 @@
+services:
+  samba:
+    ports:
+      - "$app_expose_ip:139:139/tcp"
+      - "$app_expose_ip:445:445/tcp"

@@ -1,0 +1,52 @@
+# yamllint disable rule:comments-indentation
+---
+
+access_control:
+  default_policy: one_factor
+  #  default_policy: deny
+  rules:
+  
+    # A rule must always bypass authelia itself, at least to display the login page
+    - domain: authelia.domain.com
+      policy: bypass
+
+
+# Examples:
+#
+#    # Admin domains
+#    - domain:
+#      - admin.domain.net
+#      - "*.admin.domain.net"
+#      policy: one_factor
+#      subject:
+#        - ['group:admin-it', 'group:admins']
+#
+#    # Employees domains
+#    - domain:
+#      - dolibarr.lan.domain.net
+#      #- hr.domain.com
+#      #- "*.hr.domain.com"
+#      policy: one_factor
+#      subject:
+#        - ['group:admin-hr', 'group:admins']
+#
+#    - domain:
+#      - users.auth.domain.net
+#      policy: one_factor
+#      subject:
+#        - ['group:employees', 'group:admins']
+#
+#    # Legacyyy
+#    - domain:
+#      - librespeed.lan.domain.net
+#      policy: bypass
+#
+#    - domain:
+#      #- lan.domain.net
+#      #- "*.lan.domain.net"
+#      #- "*.lan.domain.com"
+#      - "*.authelia.lan.domain.net"
+#        #- "*.domain.net"
+#        #- "*.domain.com"
+#      policy: one_factor
+#        #policy: two_factor,bypass,deny

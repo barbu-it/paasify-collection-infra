@@ -1,0 +1,80 @@
+---
+version: '3.4'
+
+networks:
+  default:
+  db:
+
+services:
+  server:
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2022.12.2}
+    restart: unless-stopped
+    command: server
+    networks:
+      default:
+        aliases:
+          - ${app_alias:-authentik}
+      db:
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:-authentik}
+    volumes:
+      - $app_dir_conf/media:/media
+      - $app_dir_conf/custom-templates:/templates
+    env_file:
+      - $app_dir_conf/env
+        #ports:
+        #  - "0.0.0.0:${AUTHENTIK_PORT_HTTP:-9000}:9000"
+        #  - "0.0.0.0:${AUTHENTIK_PORT_HTTPS:-9443}:9443"
+  worker:
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2022.12.1}
+    restart: unless-stopped
+    command: worker
+    networks:
+      db:
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:-authentik}
+    # `user: root` and the docker socket volume are optional.
+    # See more for the docker socket integration here:
+    # https://goauthentik.io/docs/outposts/integrations/docker
+    # Removing `user: root` also prevents the worker from fixing the permissions
+    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
+    # (1000:1000 by default)
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $app_dir_conf/media:/media
+      - $app_dir_conf/certs:/certs
+      - $app_dir_conf/custom-templates:/templates
+    env_file:
+      - $app_dir_conf/env
+
+  postgresql:
+    image: docker.io/library/postgres:12-alpine
+    restart: unless-stopped
+    networks:
+      db:
+    volumes:
+      - $app_dir_db_data/psql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASS:-authentik}
+      - POSTGRES_USER=${PG_USER:-authentik}
+      - POSTGRES_DB=${PG_DB:-authentik}
+    env_file:
+      - $app_dir_conf/env
+  redis:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      db:
+    volumes:
+      - $app_dir_db_data/redis:/data
+

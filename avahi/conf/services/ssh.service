@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<!-- See avahi.service(5) for more information about this configuration file -->
+
+<service-group>
+  <name replace-wildcards="yes">domain.org</name>
+  <service>
+    <type>_ssh._tcp</type>
+    <port>22</port>
+    <host-name>domain.org</host-name>
+  </service>
+</service-group>

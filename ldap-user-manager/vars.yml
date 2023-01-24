@@ -1,0 +1,9 @@
+
+# Documentation: https://github.com/wheelybird/ldap-user-manager
+
+# Traefik config
+traefik_svc_ident: lum
+traefik_svc_port: 80
+
+app_image_name: wheelybird/ldap-user-manager
+app_image_version: v1.9

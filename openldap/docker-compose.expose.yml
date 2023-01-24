@@ -1,0 +1,6 @@
+services:
+  openldap:
+    ports:
+      - $app_expose_ip:${app_expose_port:-389}:389
+      - $app_expose_ip:${app_expose_port:-636}:636
+      

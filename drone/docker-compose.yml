@@ -1,0 +1,53 @@
+version: '3.6'
+
+networks:
+  default:
+  build:
+
+services:
+  drone:
+    image: drone/drone:${app_image_version:-2.12}
+    environment:
+
+      - DRONE_SERVER_PROTO=https
+      - DRONE_SERVER_HOST=$app_fqdn
+      - DRONE_RPC_SECRET=$app_secret_token
+      - DRONE_TLS_AUTOCERT=false
+
+      - DRONE_GIT_ALWAYS_AUTH=${DRONE_GIT_ALWAYS_AUTH:-false} # Set to true to access private repos
+      - DRONE_USER_CREATE=$DRONE_USER_CREATE
+      # DEPRECATED- DRONE_ADMIN=$DRONE_ADMIN # Depreacted since 0.9 => DRONE_USER_CREATE
+
+      - DRONE_DATABASE_DRIVER=sqlite3
+      - DRONE_DATABASE_DATASOURCE=/data/database.sqlite
+
+      # Howto: https://docs.drone.io/server/provider/gitea/
+      # See API: https://try.gitea.io/api/swagger#/user/userCreateOAuth2Application
+      - DRONE_GITEA_SERVER=$DRONE_GITEA_SERVER
+      - DRONE_GITEA_CLIENT_ID=$DRONE_GITEA_CLIENT_ID
+      - DRONE_GITEA_CLIENT_SECRET=$DRONE_GITEA_CLIENT_SECRET
+
+    networks:
+      - default
+      - build
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $app_dir_data:/data
+
+  drone-runner:
+    image: drone/drone-runner-docker:${app_image_version:-1.8}
+    depends_on:
+      - drone
+    environment:
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_HOST=drone
+      - DRONE_RUNNER_NAME=drone-runner
+
+      - DRONE_RPC_SECRET=$app_secret_token
+      - DRONE_RUNNER_CAPACITY=2
+
+    networks:
+      - build
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+

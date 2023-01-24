@@ -1,0 +1,10 @@
+services:
+  librespeed:
+    environment:
+      - DB_TYPE=$app_db_type #optional
+      - DB_NAME=$app_db_name #optional
+      - DB_HOSTNAME=$app_db_host #optional
+      - DB_USERNAME=$app_db_user #optional
+      - DB_PASSWORD=$app_db_pass #optional
+      - DB_PORT=$app_db_port #optional
+

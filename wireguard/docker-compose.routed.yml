@@ -1,0 +1,7 @@
+
+services:
+  wireguard:
+    volumes:
+      - $app_dir_template/conf/server-routed.conf:/defaults/server.conf
+      - /lib/modules:/lib/modules
+

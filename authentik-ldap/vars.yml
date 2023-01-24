@@ -1,0 +1,8 @@
+app_alias: authentik
+app_port: 9000
+app_prot: http
+
+authentik_host: $app_prot://$app_alias:$app_port
+authentik_token:
+authentik_insecure: true
+

@@ -1,0 +1,11 @@
+traefik_svc_port: "3000"
+app_description: A painless self-hosted Git service
+
+app_image: 'gitea/gitea'
+app_image_version: '1.16'
+
+img_mariadb10_name: mariadb
+img_mariadb10_version: 10
+mysql_user_pass: CHANGEME!
+mysql_root_pass: CAHNGEME!!
+

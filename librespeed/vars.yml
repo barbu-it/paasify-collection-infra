@@ -1,0 +1,6 @@
+app_image: lscr.io/linuxserver/librespeed
+app_image_version: 5.2.5
+
+homepage_icon: librespeed
+app_description: Free and Open Source Speedtest. No Flash, No Java, No Websocket, No Bullshit
+

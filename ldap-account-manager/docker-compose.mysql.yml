@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+
+  lam:
+
+    # Doc: https://github.com/LDAPAccountManager/lam/blob/develop/lam-packaging/docker/.env
+    environment:
+      - LAM_CONFIGURATION_DATABASE=mysql
+      # MySQL server if database is mysql
+      - LAM_CONFIGURATION_HOST=${mysql_host}
+      # MySQL port if database is mysql
+      - LAM_CONFIGURATION_PORT=${mysql_port}
+      # MySQL user name if database is mysql
+      - LAM_CONFIGURATION_USER=${mysql_user_login}
+      # MySQL password if database is mysql
+      - LAM_CONFIGURATION_PASSWORD=${mysql_user_pass}
+      # MySQL database name if database is mysql
+      - LAM_CONFIGURATION_DATABASE_NAME=${mysql_user_db}
+

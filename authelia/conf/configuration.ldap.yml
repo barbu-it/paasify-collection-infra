@@ -1,0 +1,29 @@
+# yamllint disable rule:comments-indentation
+---
+authentication_backend:
+  ldap:
+    implementation: custom
+    url: ldap://openldap
+    timeout: 5s
+    start_tls: false
+      #tls:
+      #  server_name: ldap.example.com
+      #  skip_verify: false
+      #  minimum_version: TLS1.2
+    users_filter: (&({username_attribute}={input})(objectClass=person))
+    username_attribute: uid
+    mail_attribute: mail
+    display_name_attribute: displayName
+
+    additional_groups_dn: ou=groups
+    groups_filter: (&(uniqueMember={dn})(objectClass=groupOfUniqueNames))
+    group_name_attribute: cn
+    permit_referrals: false
+    permit_unauthenticated_bind: false
+
+    additional_users_dn: ou=people
+    base_dn: DC=example,DC=org
+    user: CN=admin,DC=example,DC=org
+    password: devbox_admin
+
+

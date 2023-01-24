@@ -1,0 +1,6 @@
+services:
+  authentik_ldap:
+    ports:
+      - $app_expose_ip:389:3389
+      - $app_expose_ip:636:6636
+        #      - $app_expose_ip:$app_expose_port:6636

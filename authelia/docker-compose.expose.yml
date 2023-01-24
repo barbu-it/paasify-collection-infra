@@ -1,0 +1,4 @@
+services:
+  authelia:
+    expose:
+      - ${app_expose_ip}:${app_expose_port:-9091}:9091

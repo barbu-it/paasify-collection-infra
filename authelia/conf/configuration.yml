@@ -1,0 +1,101 @@
+# yamllint disable rule:comments-indentation
+---
+server:
+  host: 0.0.0.0
+  port: 9091
+  buffers:
+    write: 4096
+    read: 4096
+
+  path: "authelia"
+# ENV: log_level: debug
+#jwt_secret: somethingsomethingrandomrecret567890765434567
+default_redirection_url: https://authelia   # NOENV
+  #duo_api:
+  #  hostname: api-somenumber.duosecurity.com
+  #  integration_key: SOMESECRETKEY
+  #  secret_key: somelongersecretkey
+authentication_backend:
+  password_reset:
+    disable: false
+    custom_url: "https://users.auth.example.net" # NOENV
+
+access_control:
+  default_policy: one_factor
+  #  default_policy: deny
+  #  rules:
+  #
+  #    - domain: auth.example.com
+  #      policy: bypass
+  #
+  #    # Admin domains
+  #    - domain:
+  #      - admin.example.net
+  #      - "*.admin.example.net"
+  #      policy: one_factor
+  #      subject:
+  #        - ['group:admin-it', 'group:admins']
+  #
+  #    # Employees domains
+  #    - domain:
+  #      - dolibarr.lan.example.net
+  #      #- hr.example.com
+  #      #- "*.hr.example.com"
+  #      policy: one_factor
+  #      subject:
+  #        - ['group:admin-hr', 'group:admins']
+  #
+  #    - domain:
+  #      - users.auth.example.net
+  #      policy: one_factor
+  #      subject:
+  #        - ['group:employees', 'group:admins']
+  #
+  #    # Legacyyy
+  #    - domain:
+  #      - librespeed.lan.example.net
+  #      policy: bypass
+  #
+  #    - domain:
+  #      #- lan.example.net
+  #      #- "*.lan.example.net"
+  #      #- "*.lan.example.com"
+  #      - "*.authelia.lan.example.net"
+  #        #- "*.example.net"
+  #        #- "*.example.com"
+  #      policy: one_factor
+  #        #policy: two_factor,bypass,deny
+session:
+  name: authelia_session
+  #ENV secret: somerandomsecret
+  expiration: 1h
+  inactivity: 5m
+  remember_me_duration: 1M
+  # ENV domain: lan.example.net
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+storage:
+  #ENV encryption_key:  687347boweubycrq84vr984olvtbue9y8tyenvurley8tvbet90ewtve-0t9ve
+  local:
+    path: /config/db.sqlite3
+notifier:
+  filesystem:
+    filename: /config/notification.txt
+
+      #notifier:
+      #  disable_startup_check: false
+      #  smtp:
+      #    username: myemail@gmail.com
+      #    password: longpassword
+      #    host: smtp.gmail.com
+      #    port: 587
+      #    sender: myemail@gmail.com
+      #    subject: "[Authelia] {title}"
+      #    startup_check_address: test@authelia.com
+      #      #trusted_cert: ""
+      #      #disable_require_tls: false
+      #      #disable_verify_cert: false
+      #
+

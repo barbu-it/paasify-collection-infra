@@ -1,0 +1,9 @@
+services:
+  mailserver:
+    environment:
+      LOG_LEVEL: 'debug'
+        #LOG_LEVEL: 'trace'
+      SUPERVISOR_LOGLEVEL: debug
+      AMAVIS_LOGLEVEL: 3 # verbose
+        # AMAVIS_LOGLEVEL: 4 # 
+        # AMAVIS_LOGLEVEL: 5 # very verbose

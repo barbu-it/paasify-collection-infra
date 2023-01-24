@@ -1,0 +1,28 @@
+
+# Variable config: https://github.com/minio/minio/blob/master/docs/sts/ldap.md#variable-substitution-in-configuration-strings
+
+networks:
+  ldap:
+    external: true
+    name: ${net_ldap:-ldap}
+
+services:
+  minio:
+    networks:
+      ldap:
+    environment:
+      - MINIO_IDENTITY_LDAP_SERVER_ADDR=$ldap_host:$ldap_port
+        #- MINIO_IDENTITY_LDAP_SERVER_ADDR=ldap:636 or 389
+      - MINIO_IDENTITY_LDAP_LOOKUP_BIND_DN=$ldap_admin_bind_dn
+      - MINIO_IDENTITY_LDAP_LOOKUP_BIND_PASSWORD=$ldap_admin_bind_pass
+      - MINIO_IDENTITY_LDAP_USER_DN_SEARCH_BASE_DN=$ldap_user_base_dn
+      - MINIO_IDENTITY_LDAP_SERVER_INSECURE=on
+        #- MINIO_IDENTITY_LDAP_TLS_SKIP_VERIFY=on
+        #- MINIO_IDENTITY_LDAP_SERVER_STARTTLS=off
+      - MINIO_IDENTITY_LDAP_USER_DN_SEARCH_FILTER=(uid=%s)
+      #- MINIO_IDENTITY_LDAP_USER_DN_SEARCH_FILTER
+
+        #- MINIO_IDENTITY_LDAP_USERNAME_FORMAT # Legacy method
+      - MINIO_IDENTITY_LDAP_GROUP_SEARCH_BASE_DN=$ldap_group_base_dn
+      - MINIO_IDENTITY_LDAP_GROUP_SEARCH_FILTER=(&(objectClass=posixGroup)(uniqueMember=%d))
+

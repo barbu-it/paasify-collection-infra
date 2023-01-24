@@ -1,0 +1,8 @@
+
+services:
+  samba:
+    ports:
+      - "137:137/udp"
+      - "138:138/udp"
+    environment:
+      - NMBD=true

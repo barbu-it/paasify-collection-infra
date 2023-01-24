@@ -1,0 +1,5 @@
+
+services:
+  phpldapadmin:
+    ports:
+      - "8080:80"

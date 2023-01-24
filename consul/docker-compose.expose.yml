@@ -1,0 +1,13 @@
+x-consul-bootstrap: &consul_server_ports
+  ports:
+    - "$app_expose_ip:8400:8400"
+    - "$app_expose_ip:8500:8500"
+    - "$app_expose_ip:8600:8600"
+    - "$app_expose_ip:8600:8600/udp"
+
+
+services:
+
+  consul:
+    <<: *consul_server_ports
+

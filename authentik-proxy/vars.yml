@@ -1,0 +1,8 @@
+
+app_port: 9000
+app_prot: http
+
+authentik_host: http://authentik:9000
+authentik_host_browser:
+authentik_token:
+authentik_insecure: false

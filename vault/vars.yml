@@ -1,0 +1,8 @@
+# Documentation: https://github.com/wheelybird/ldap-user-manager
+
+# Traefik config
+traefik_svc_ident: vault
+
+app_port: 8200
+app_image_name: vault
+app_image_version: "1.12.0"

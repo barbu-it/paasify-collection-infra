@@ -1,0 +1,6 @@
+version: "3.3"
+
+services:
+  wireguard:
+    ports:
+      - $app_expose_ip:$app_expose_port:$app_expose_port/$app_expose_prot

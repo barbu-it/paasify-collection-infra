@@ -1,0 +1,8 @@
+
+services:
+  gitea:
+    ports:
+      - "$app_expose_ip:222:22"
+      - "$app_expose_ip:80:80"
+
+

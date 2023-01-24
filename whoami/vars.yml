@@ -1,0 +1,5 @@
+app_port: 80
+  #traefik_svc_port: 8080
+
+app_description: "Application to display your browser headers"
+homepage_icon: /icons/whoami.png

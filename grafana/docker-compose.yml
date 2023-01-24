@@ -1,0 +1,21 @@
+version: '3.7'
+
+
+services:
+
+  grafana:
+    image: grafana/grafana
+    user: "472"
+      #ports:
+      #  - 3000:3000
+    volumes:
+      - $app_dir_data:/var/lib/grafana
+      - $app_dir_conf/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+        #env_file:
+        #  - ./grafana/config.monitoring
+        #    networks:
+        #- prometheus
+        #  - front-tier

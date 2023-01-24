@@ -1,0 +1,28 @@
+
+networks:
+  proxy:
+    name: ${net_proxy}
+
+
+services:
+
+  selfservice:
+    image: docker.io/ltbproject/self-service-password:latest
+    restart: always
+    networks:
+      proxy:
+      default:
+
+    volumes:
+      - ./selfserve/config.inc.php:/var/www/conf/config.inc.local.php
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.selfserve.entrypoints: front-http,front-https
+        #traefik.http.routers.selfserve.rule: Host(`(auth|selfserve|handler).$app_domain`)
+      traefik.http.routers.selfserve.rule: Host(`self.$app_domain`)
+        #traefik.http.routers.selfserve.rule: Host(`selfserve.$app_domain`)
+      traefik.http.routers.selfserve.service: selfserve
+      traefik.http.routers.selfserve.tls: "true"
+      traefik.http.routers.selfserve.tls.certresolver: $traefik_svc_certresolver
+      traefik.http.services.selfserve.loadbalancer.server.port: '80'
+

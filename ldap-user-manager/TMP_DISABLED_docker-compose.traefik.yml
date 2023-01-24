@@ -1,0 +1,17 @@
+networks:
+  proxy:
+    external: true
+    name: ${net_proxy}
+
+services:
+
+  lum:
+  
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.lum.entrypoints: front-http,front-https
+      traefik.http.routers.lum.rule: Host(`lum.$app_domain`)
+      traefik.http.routers.lum.service: lum
+      traefik.http.routers.lum.tls: "true"
+      traefik.http.routers.lum.tls.certresolver: $traefik_svc_certresolver
+      traefik.http.services.lum.loadbalancer.server.port: '80'

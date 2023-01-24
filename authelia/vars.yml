@@ -1,0 +1,22 @@
+# Traefik config
+traefik_svc_port: "9091"
+app_image_name: authelia/authelia
+app_image_version: '4.36'
+
+
+# Select backend, file or ldap
+# authelia_auth_backend: ldap
+authelia_auth_backend: file
+
+# To create random values:
+#   docker run authelia/authelia:latest authelia crypto rand --length 64 --charset alphanumeric
+#   openssl rand -hex 64
+
+# Doc: https://www.authelia.com/reference/cli/authelia/authelia_storage_encryption_change-key/
+# Can do key rotation
+#
+# The minimum length of those key is 20 characters.
+authelia_jwt_secret: CHANGEME
+authelia_session_secret: CHANGEME
+authelia_storage_encryption_key: CHANGEME
+

@@ -1,0 +1,19 @@
+
+# See: https://github.com/Sqooba/prometheus-docker-labels-discovery
+
+services:
+  prometheus-docker-labels-discovery:
+    image: sqooba/prometheus-docker-labels-discovery:v1
+    restart: unless-stopped
+      #networks:
+      #  - monitoring_default # make sure this network exists and is connected to prometheus
+#    ports:
+#      - "8080"
+    security_opt:
+      - no-new-privileges:true
+    volumes: # Mount the JSON file that will be exchanged with prometheus
+      - $app_dir_conf/from-docker-labels.json:/tmp/from-docker-labels.json
+    environment:
+      - PROMETHEUS_CONFIG_FILE_PATH=/tmp/from-docker-labels.json
+      - DOCKER_NETWORK_NAME=bridge
+      - PROMETHEUS_COMMON_LABELS=commonlabel1=commonvalue1

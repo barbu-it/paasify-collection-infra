@@ -1,0 +1,5 @@
+app_port: "9000"
+  #traefik_svc_port: "9000"
+
+app_description: "Authentik is an open-source Identity Provider focused on flexibility and versatility"
+homepage_icon: /icons/authentik.png

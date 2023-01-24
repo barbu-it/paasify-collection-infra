@@ -1,0 +1,11 @@
+services:
+  drone:
+    environment:
+      - DRONE_DEBUG=true
+      - DRONE_TRACE=false
+
+  drone-runner:
+    environment:
+      - DRONE_DEBUG=true
+      - DRONE_TRACE=false
+

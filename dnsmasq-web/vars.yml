@@ -1,0 +1,7 @@
+app_port: 8080
+app_desc: dnsmasq web ui
+
+  #app_expose_port: 69
+  #app_expose_prot: udp
+
+

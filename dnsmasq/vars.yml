@@ -1,0 +1,7 @@
+app_port: 69
+app_desc: dnsmasq
+
+app_expose_port: 69
+app_expose_prot: udp
+
+

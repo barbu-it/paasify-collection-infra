@@ -1,0 +1,9 @@
+version: "3.5"
+
+services:
+  authentik_ldap:
+    image: ghcr.io/goauthentik/ldap
+    environment:
+        AUTHENTIK_HOST: $authentik_host
+        AUTHENTIK_INSECURE: $authentik_insecure
+        AUTHENTIK_TOKEN: $authentik_token

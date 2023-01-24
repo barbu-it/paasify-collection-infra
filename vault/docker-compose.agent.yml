@@ -1,0 +1,14 @@
+services:
+
+  agent:
+    image: hashicorp/vault-enterprise:latest
+    entrypoint: "vault agent -log-level debug -config=/vault-agent/nginx-vault-agent.hcl"
+    volumes:
+      $app_dir_conf/agent:/vault-agent/
+    environment:
+      VAULT_ADDR: "http://vault.auth:${app_port:-8200}"
+      VAULT_OIDC_ADDR: "http://vault.auth:app_port:-8250"
+      VAULT_LOG_LEVEL: debug
+      VAULT_TOKEN: admin
+    networks:
+      default:

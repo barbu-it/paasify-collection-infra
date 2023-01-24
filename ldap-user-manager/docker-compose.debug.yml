@@ -1,0 +1,9 @@
+
+
+services:
+    lum:
+      environment:
+        - LDAP_DEBUG=true
+        - LDAP_VERBOSE_CONNECTION_LOGS=true
+        - SESSION_DEBUG=true
+        - SMTP_LOG_LEVEL=4

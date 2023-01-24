@@ -1,0 +1,6 @@
+services:
+  librespeed:
+    ports:
+      #- ${app_expose_port:-80}:80
+      - ${app_expose_ip:-0.0.0.0}:${app_expose_port:-80}:80
+

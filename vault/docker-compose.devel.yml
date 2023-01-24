@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  vault:
+    image: vault:latest
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:${app_port:-8200}"
+      VAULT_DEV_ROOT_TOKEN_ID: "${app_secret_token:-admin}"
+      VAULT_LOG_LEVEL: debug
+      VAULT_UI: 'true'
+        #volumes:
+        #  - $app_dir_logs/server:/vault/logs
+        #  - $app_dir_conf/server:/vault/config
+        #  - $app_dir_dhare/server:/vault/plugins
+        #  - $app_dir_data/server:/vault/file
+    cap_add:
+      - IPC_LOCK
+    networks:
+      default:
+        aliases:
+          - vault
+          - vault.dev
+
+

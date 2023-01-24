@@ -1,0 +1,25 @@
+---
+
+networks:
+  consul:
+
+services:
+
+  consul-agent:
+    hostname: consul-agent-0
+    image: consul:1.10
+    restart: unless-stopped
+    command: "agent -retry-join consul -client 0.0.0.0"
+    networks:
+      - consul
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+
+#  consul-agent-1:
+#    <<: *consul_agent
+#    hostname: consul-agent-1
+#
+#  consul-agent-2:
+#    <<: *consul_agent
+#    hostname: consul-agent-2
+
