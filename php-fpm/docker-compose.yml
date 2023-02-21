@@ -1,0 +1,20 @@
+services:
+
+  web:
+    image: nginx:1.17
+    depends_on:
+      - php
+    links:
+      - php
+    volumes:
+      - $app_dir_data:/var/www/html
+      - $app_dir_conf/nginx:/etc/nginx/conf.d/
+    ports:
+      - "80"
+
+  php:
+    image: php:8.1.16-fpm-bullseye
+    volumes:
+      - $app_dir_data:/var/www/html
+      - $app_dir_conf/php:/usr/local/etc/php/php.ini
+

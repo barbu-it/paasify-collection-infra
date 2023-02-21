@@ -1,0 +1,13 @@
+services:
+
+  web:
+    image: httpd:2.4
+    depends_on:
+      - php
+    links:
+      - php
+    volumes:
+      - $app_dir_data:/usr/local/apache2/htdocs/
+      - $app_dir_conf/httpd:/usr/local/apache2/conf/
+    ports:
+      - "80"

@@ -1,0 +1,16 @@
+
+# Base configuration
+# ===================
+app_image: node
+app_image_version: 19-bullseye
+app_port: 8081
+app_description: Node.js is a software platform for scalable server-side and networking applications
+
+homepage_icon: node
+
+
+# Node configuration
+# ===================
+
+node_env: production
+

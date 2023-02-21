@@ -1,0 +1,6 @@
+app_image: php
+app_image_version: 8.1.16-fpm-bullseye
+
+traefik_svc_port: "80"
+traefik_svc_name: "web"
+

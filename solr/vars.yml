@@ -1,0 +1,29 @@
+
+# Base configuration
+# ===================
+app_image: bitnami/solr
+app_image_version: 9-debian-11
+app_port: 8983
+app_description: Solr is highly reliable, scalable and fault tolerant, providing distributed indexing, replication and load-balanced querying, automated failover and recovery, centralized configuration and more.
+
+homepage_icon: solr
+
+
+# Solr configuration
+# ===================
+
+# Enable the authentication, you can indicate the administrator credentiales with the following variables. Default: no
+solr_enable_auth: True
+
+# Specify the Solr server directory. Default: /opt/bitnami/solr/server
+solr_server_dir: /opt/bitnami/solr/server
+
+# Configuration directory to copy when creating a new core. Default: data_driven_schema_configs
+solr_core_conf_dir: data_driven_schema_configs
+
+# List of Solr server options and flags separated by either a space, (``), a comma (,) or a semicolon (;). No default. (E.g.: '-XX:+AggressiveOpts -XX:G1HeapRegionSize=8m')
+solr_opts: ''
+
+# List of core names to create at first run separated by either a space, (``), a comma (,) or a semicolon (;). No default. (E.g.: 'my_core_en,my_core_es')
+solr_cores: ''
+

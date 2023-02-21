@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  solr:
+    image: ${app_image}:${app_image_version}
+    environment:
+      - SOLR_PORT_NUMBER=$app_port
+      - SOLR_SERVER_DIR=$solr_server_dir
+      - SOLR_CORE_CONF_DIR=$solr_core_conf_dir
+      - SOLR_CORES=$solr_cores
+      - SOLR_OPTS=$solr_opts
+
+      - SOLR_ENABLE_AUTHENTICATION=$solr_enable_auth
+      - SOLR_ADMIN_USERNAME=$app_admin_user
+      - SOLR_ADMIN_PASSWORD=$app_admin_pass
+
+        #- SOLR_CLOUD_BOOTSTRAP=
+        #- SOLR_ENABLE_CLOUD_MODE=
+        #- SOLR_COLLECTION=
+        #- SOLR_COLLECTION_SHARDS=
+        #- SOLR_COLLECTION_REPLICAS=
+        #- SOLR_NUMBER_OF_NODES=
+        #- SOLR_HOST=
+        #- SOLR_ZK_SLEEP_TIME=
+        #- SOLR_ZK_MAX_RETRIES=
+
+        #- SOLR_SSL_ENABLED=
+        #- SOLR_SSL_KEY_STORE=
+        #- SOLR_SSL_KEY_STORE_PASSWORD=
+        #- SOLR_SSL_TRUST_STORE=
+        #- SOLR_SSL_TRUST_STORE_PASSWORD=
+        #- SOLR_SSL_CHECK_PEER_NAME=
+
+      - TZ=$app_tz
+    volumes:
+      - $app_dir_data:/bitnami
