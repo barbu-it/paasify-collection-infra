@@ -3,7 +3,7 @@
 services:
 
 
-  minio:
+  s3:
     # See roles: https://min.io/docs/minio/linux/developers/security-token-service/AssumeRoleWithWebIdentity.html#minio-sts-assumerolewithwebidentity
     environment: 
       - MINIO_IDENTITY_OPENID_CONFIG_URL=$openid_config_url

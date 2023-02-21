@@ -19,7 +19,7 @@ networks:
     name: ${app_network_name:-s3}
 
 services:
-  minio:
+  s3:
     image: ${app_image}:${app_image_version}
     command: server --address ":9000" --console-address ":9001" /data
     networks:
@@ -39,10 +39,10 @@ services:
       MINIO_ROOT_USER: $app_admin_user
       MINIO_ROOT_PASSWORD: $app_admin_pass
       
-      # Console
+      # Console Config
       MINIO_BROWSER: on
-      MINIO_SERVER_URL: http://minio:9000
-      MINIO_BROWSER_REDIRECT_URL: ${app_prot}://$app_adm_name.$app_domain
+      MINIO_SERVER_URL: http://s3:9000
+      MINIO_BROWSER_REDIRECT_URL: ${app_prot}://$app_name.$app_domain
 
 
 

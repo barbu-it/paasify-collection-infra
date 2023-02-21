@@ -7,7 +7,7 @@ networks:
     name: ${net_ldap:-ldap}
 
 services:
-  minio:
+  s3:
     networks:
       ldap:
     environment:

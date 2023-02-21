@@ -3,5 +3,6 @@ app_image_version: RELEASE.2022-10-20T00-55-09Z
 
 app_network_name: $net_ostorage
 traefik_svc_port: "9000"
+traefik_svc_name: "s3"
 
 # See: https://min.io/docs/minio/linux/reference/minio-server/minio-server.html#minio-server-environment-variables
