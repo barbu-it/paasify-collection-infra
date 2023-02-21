@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  web:
+    image: php:5.4-apache
+    environment:
+        - TIMEZONE=$app_tz
+        - PHP_EXT=pdo_mysql
+    command: |
+        sh -c '
+            a2enmod rewrite \
+            && usermod -u `stat -c %u /var/www/html` www-data \
+            && groupmod -g `stat -c %g /var/www/html` www-data \
+            && chsh -s /bin/bash www-data \
+            && echo "date.timezone = $${TIMEZONE}" > /usr/local/etc/php/conf.d/timezone.ini \
+            && docker-php-ext-install $${PHP_EXT} \
+            && cat -n /etc/apache2/apache2.conf \
+            && apache2-foreground'
+    volumes:
+          - $app_dir_data:/var/www/html/
+          - $app_dir_logs:/var/log/apache2/
+
