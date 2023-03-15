@@ -3,6 +3,7 @@ app_image_version: v2.9
 app_product: traefik
 app_port: '8080' 
 
+traefik_net_external: False
 traefik_net_name: ${app_network_name}
 
 # Simple version: traefik_docker_constraint: "Label(`traefik.group`,`$app_network_name`)"

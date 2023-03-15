@@ -1,3 +1,0 @@
-traefik_svc_port: "80"
-homepage_icon: mdi-cloud-upload-outline
-app_description: BackupPC is a high-performance, enterprise-grade system for backing up Linux, Windows and macOS PCs and laptops to a server's disk.

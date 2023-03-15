@@ -1,2 +1,5 @@
-app_port: 777
+app_port: 139
+app_ports:
+  - 139
+  - 445
 
