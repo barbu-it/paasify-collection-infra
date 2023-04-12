@@ -11,4 +11,9 @@ services:
       - CUSTOM_RESULTS=false  #optional
       - DB_TYPE=sqlite #optional
     volumes:
-      - $app_dir_conf:/config
+      #- $app_dir_conf:/config
+      - $app_dir_conf/certs:/config/keys
+      - $app_dir_conf/nginx:/config/nginx
+      - $app_dir_conf/php:/config/php
+      - $app_dir_data/php:/config/www
+      - $app_dir_logs:/config/log

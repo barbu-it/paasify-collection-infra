@@ -1,5 +1,9 @@
 version: '3.7'
 
+networks:
+  prometheus:
+    name: $net_prometheus
+
 
 services:
 
@@ -10,12 +14,20 @@ services:
       #  - 3000:3000
     volumes:
       - $app_dir_data:/var/lib/grafana
+      - $app_dir_conf/dashboards/:/etc/grafana/dashboards/
       - $app_dir_conf/provisioning/:/etc/grafana/provisioning/
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=$app_admin_user
+      - GF_SECURITY_ADMIN_PASSWORD=$app_admin_pass
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=$grafana_plugins
         #env_file:
         #  - ./grafana/config.monitoring
         #    networks:
         #- prometheus
         #  - front-tier
+    networks:
+      prometheus:
+        aliases:
+          - grafana.prom
+

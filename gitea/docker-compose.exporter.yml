@@ -1,0 +1,5 @@
+
+services:
+  gitea:
+    environment:
+      - GITEA__metrics__ENABLED=True

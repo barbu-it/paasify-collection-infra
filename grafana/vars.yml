@@ -1,1 +1,2 @@
 traefik_svc_port: "3000"
+grafana_plugins: "grafana-clock-panel,grafana-simple-json-datasource"

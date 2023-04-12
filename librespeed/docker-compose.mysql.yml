@@ -1,3 +1,7 @@
+networks:
+  default:
+  db:
+
 services:
   librespeed:
     environment:
@@ -7,4 +11,23 @@ services:
       - DB_USERNAME=$app_db_user #optional
       - DB_PASSWORD=$app_db_pass #optional
       - DB_PORT=$app_db_port #optional
+    networks:
+      default:
+      db:
+
+  mysql:
+    image: mariadb:10.11
+      #image: $img_mariadb_name:$img_mariadb_version
+    volumes:
+      #      - $app_dir_db_conf:/var/lib/mysql
+      - $app_dir_db_data:/var/lib/mysql
+      - $app_dir_template/setup:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: "${app_admin_pass}"
+      MYSQL_DATABASE: "${app_db_name}"
+      MYSQL_USER: "${app_db_user}"
+      MYSQL_PASSWORD: "${app_db_pass}"
+
+    networks:
+      db:
 
