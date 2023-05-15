@@ -1,0 +1,40 @@
+version: '3.7'
+
+
+  #volumes:
+  #      - $app_dir_conf:/config
+  #      - $app_dir_conf:/etc/wireguard
+  #      - $app_dir_data:/app/db
+
+services:
+  wg-access-server:
+    image: place1/wg-access-server
+    command: >
+      /usr/local/bin/wg-access-server 
+      serve --config /config/config.yml 
+      --port $app_port 
+      --external-host $app_fqdn 
+      --wireguard-port $app_port_wg
+      --log-level="trace"
+
+
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - "$app_dir_data:/data"
+      - "$app_dir_conf:/config"
+
+    #   - "./config.yaml:/config.yaml" # if you have a custom config file
+    environment:
+      - "WG_ADMIN_USERNAME=$app_admin_user"
+      - "WG_ADMIN_PASSWORD=${app_admin_pass:?\n\nplease set the WG_ADMIN_PASSWORD environment variable:\n    export WG_ADMIN_PASSWORD=example\n}"
+      - "WG_WIREGUARD_PRIVATE_KEY=${app_token:?\n\nplease set the WG_WIREGUARD_PRIVATE_KEY environment variable:\n    export WG_WIREGUARD_PRIVATE_KEY=$$(wg genkey)\n}"
+    ports:
+      #      - "8000:8000/tcp"
+      - "$app_expose_ip:$app_port_wg:$app_port_wg/udp"
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
+
+
+
+

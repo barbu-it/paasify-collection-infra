@@ -1,0 +1,2 @@
+traefik_svc_port: "5000"
+app_port_wg: 51820

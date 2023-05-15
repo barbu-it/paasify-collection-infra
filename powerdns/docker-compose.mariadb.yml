@@ -1,0 +1,26 @@
+
+
+version: '3'
+
+services:
+  pdns:
+    environment:
+      - PDNS_gmysql_host=db
+      - PDNS_gmysql_port=3306
+      - PDNS_gmysql_user=$app_db_user
+      - PDNS_gmysql_dbname=$app_db_name
+      - PDNS_gmysql_password=$app_db_pass
+
+
+  db:
+    image: mariadb:latest
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_ROOT_PASSWORD=$app_db_admin_pass
+      - MYSQL_DATABASE=$app_db_name
+      - MYSQL_USER=$app_db_user 
+      - MYSQL_PASSWORD=$app_db_pass
+    restart: always
+    volumes:
+      - $app_dir_db_data:/var/lib/mysql
+

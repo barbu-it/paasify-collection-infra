@@ -1,0 +1,4 @@
+services:
+  pdns:
+    ports:
+      - "$app_expose_ip:8081:8081"

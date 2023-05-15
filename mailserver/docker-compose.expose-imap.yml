@@ -5,7 +5,7 @@ services:
     # To avoid conflicts with yaml base-60 float, DO NOT remove the quotation marks.
     ports:
       - "$app_expose_ip:25:25"    # SMTP  (explicit TLS => STARTTLS)
+      - "$app_expose_ip:143:143"  # IMAP4 (explicit TLS => STARTTLS)
       - "$app_expose_ip:465:465"  # ESMTP (implicit TLS)
       - "$app_expose_ip:587:587"  # ESMTP (explicit TLS => STARTTLS)
-        #- "$app_expose_ip:143:143"  # IMAP4 (explicit TLS => STARTTLS)
-        #- "$app_expose_ip:993:993"  # IMAP4 (implicit TLS)
+      - "$app_expose_ip:993:993"  # IMAP4 (implicit TLS)

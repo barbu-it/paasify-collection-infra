@@ -1,0 +1,7 @@
+
+# Traefik config
+traefik_svc_ident: vaultwarden
+
+app_port: 80
+app_image_name: vaultwarden/server
+app_image_version: latest

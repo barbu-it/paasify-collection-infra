@@ -1,0 +1,16 @@
+localhost {
+  log
+
+  reverse_proxy * firezone:13000
+
+  encode gzip
+
+  tls internal
+}
+
+:8443 {
+  handle /hello {
+    respond "HELLO
+"
+  }
+}

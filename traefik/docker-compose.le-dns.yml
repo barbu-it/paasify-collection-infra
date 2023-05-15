@@ -7,6 +7,10 @@ services:
       - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}=true
       - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_EMAIL=${app_admin_email}
       - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_STORAGE=/data/acme-${traefik_svc_certresolver}.json
+      - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_CASERVER=${traefik_cert_caserver:-https://acme-v02.api.letsencrypt.org/directory}
+      - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_EAB_KID=${traefik_cert_eab_kid}
+      - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_EAB_HMACENCODED=${traefik_cert_eab_hmac}
+        # Staging- TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_CASERVER=${traefik_svc_caserver:-https://acme-staging-v02.api.letsencrypt.org/directory}
       - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_DNSCHALLENGE=true
 
       - TRAEFIK_CERTIFICATESRESOLVERS_${traefik_svc_certresolver}_ACME_DNSCHALLENGE_PROVIDER=${traefik_cert_provider}

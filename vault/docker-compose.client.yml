@@ -6,13 +6,15 @@ services:
     environment:
       #VAULT_ADDR: "http://vault:${traefik_svc_port:-8200}"
       VAULT_ADDR: "https://$app_fqdn"
+      VAULT_ADDR: "http://vault:$app_port"
         #VAULT_OIDC_ADDR: "http://vault.auth:app_port:-8200"
       VAULT_TOKEN: admin
 
-      VAULT_OIDC_ADDR: "http://0.0.0.0:8250" # CAn it works ?
+        #VAULT_OIDC_ADDR: "http://0.0.0.0:8250" # CAn it works ?
       VAULT_LOG_LEVEL: debug
     entrypoint: /bin/sh
     tty: true
+      # restart: never
     networks:
       default:
         aliases:

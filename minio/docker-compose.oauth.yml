@@ -8,6 +8,7 @@ services:
     environment: 
       - MINIO_IDENTITY_OPENID_CONFIG_URL=$openid_config_url
       - MINIO_IDENTITY_OPENID_CLIENT_ID=$openid_client_id
+      - MINIO_IDENTITY_OPENID_CLIENT_SECRET=$openid_client_secret
       - MINIO_IDENTITY_OPENID_CLAIM_NAME=$openid_claim_name
       - MINIO_IDENTITY_OPENID_SCOPES=$openid_scopes
       - MINIO_IDENTITY_OPENID_REDIRECT_URI=$openid_redirect_url

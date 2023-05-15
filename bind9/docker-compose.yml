@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  bind:
+    image: labbsr0x/dns-bind9
+    volumes:
+      - "$app_dir_conf/:/data"   # PERM ISSUES, MUST BE named or chmod 777
+      - "$app_dir_logs:/var/log/named"   # PERM ISSUES, MUST BE named or chmod 777

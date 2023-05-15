@@ -1,0 +1,9 @@
+
+services:
+  wireguard-ui:
+    cap_add:
+      - NET_ADMIN
+    # required to show active clients. with this set, you don't need to expose the ui port (5000) anymore
+    network_mode: host
+
+

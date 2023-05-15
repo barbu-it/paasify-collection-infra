@@ -1,0 +1,21 @@
+services:
+
+  powerdns_admin:
+    image: powerdnsadmin/pda-legacy:latest
+      #ports:
+      #  - "$app_expose_ip:8080:80"
+    depends_on:
+      - db
+    links:
+      - db:mysql
+      - pdns:pdns
+        #logging:
+        #  driver: json-file
+        #  options:
+        #    max-size: 50m
+    environment:
+      - SQLALCHEMY_DATABASE_URI=mysql://$app_db_user:$app_db_pass@db/$app_db_name
+      - GUNICORN_TIMEOUT=60
+      - GUNICORN_WORKERS=2
+      - GUNICORN_LOGLEVEL=$app_log_level
+

@@ -1,0 +1,9 @@
+
+
+services:
+  mailserver:
+    environment:
+      - ENABLE_FAIL2BAN=1
+      # Using letsencrypt for SSL/TLS certificates:
+      - SSL_TYPE=letsencrypt
+

@@ -1,0 +1,25 @@
+version: '3.7'
+
+
+services:
+  wireguard-ui:
+    image: ngoduykhanh/wireguard-ui:latest
+    environment:
+      - SENDGRID_API_KEY
+      - EMAIL_FROM_ADDRESS
+      - EMAIL_FROM_NAME
+      - SESSION_SECRET
+      - WGUI_USERNAME=$app_admin_user
+      - WGUI_PASSWORD=$app_admin_pass
+      - WG_CONF_TEMPLATE
+      - WGUI_SERVER_LISTEN_PORT=$app_port
+      - WGUI_MANAGE_START=false
+      - WGUI_MANAGE_RESTART=false
+
+    volumes:
+      - $app_dir_conf:/config
+      - $app_dir_conf:/etc/wireguard
+      - $app_dir_data:/app/db
+
+
+

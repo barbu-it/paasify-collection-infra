@@ -1,0 +1,8 @@
+# Documentation: https://github.com/wheelybird/ldap-user-manager
+
+# Traefik config
+traefik_svc_ident: bind9
+
+app_port: 53
+app_image_name: labbsr0x/dns-bind9
+app_image_version: "latest"

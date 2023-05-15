@@ -16,11 +16,12 @@ services:
           - ${app_alias:-authentik}
       db:
     environment:
+      AUTHENTIK_SECRET_KEY: $app_token
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:-authentik}
+      AUTHENTIK_POSTGRESQL__USER: ${app_db_user:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${app_db_name:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${app_db_pass:-authentik}
     volumes:
       - $app_dir_conf/media:/media
       - $app_dir_conf/custom-templates:/templates
@@ -36,11 +37,12 @@ services:
     networks:
       db:
     environment:
+      AUTHENTIK_SECRET_KEY: $app_token
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:-authentik}
+      AUTHENTIK_POSTGRESQL__USER: ${app_db_user:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${app_db_name:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${app_db_pass:-authentik}
     # `user: root` and the docker socket volume are optional.
     # See more for the docker socket integration here:
     # https://goauthentik.io/docs/outposts/integrations/docker
@@ -64,9 +66,9 @@ services:
     volumes:
       - $app_dir_db_data/psql:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=${PG_PASS:-authentik}
-      - POSTGRES_USER=${PG_USER:-authentik}
-      - POSTGRES_DB=${PG_DB:-authentik}
+      - POSTGRES_PASSWORD=${app_db_pass:-authentik}
+      - POSTGRES_USER=${app_db_user:-authentik}
+      - POSTGRES_DB=${app_db_name:-authentik}
     env_file:
       - $app_dir_conf/env
   redis:

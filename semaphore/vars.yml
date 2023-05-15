@@ -1,0 +1,4 @@
+traefik_svc_port: "3000"
+homepage_icon: ansible
+app_description: Semaphore is a responsive web UI for running Ansible playbooks
+

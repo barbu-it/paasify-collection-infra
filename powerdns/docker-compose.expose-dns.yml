@@ -1,0 +1,5 @@
+services:
+  pdns:
+    ports:
+      - "$app_expose_ip:53:53/tcp"
+      - "$app_expose_ip:53:53/udp"

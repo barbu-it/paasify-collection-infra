@@ -1,0 +1,7 @@
+
+# Traefik config
+traefik_svc_ident: poweradmin
+
+app_port: 80
+  #app_image_name: vault
+  #app_image_version: "1.12.0"

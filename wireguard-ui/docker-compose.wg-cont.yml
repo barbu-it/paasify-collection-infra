@@ -1,0 +1,26 @@
+version: '3.7'
+
+
+services:
+  wireguard-ui:
+    depends_on:
+      - wireguard
+    cap_add:
+      - NET_ADMIN
+    # use the network of the 'wireguard' service. this enables to show active clients in the status page
+    #network_mode: service:wireguard
+
+  wireguard:
+    image: linuxserver/wireguard:latest
+    environment:
+      - SERVERPORT=$app_port_wg
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - $app_dir_conf:/config
+    ports:
+      # port for wireguard-ui. this must be set here as the `wireguard-ui` container joins the network of this container and hasn't its own network over which it could publish the ports
+      #      - "5001:$app_port"
+      # port of the wireguard server
+      - "$app_expose_ip:$app_port_wg:$app_port_wg/udp"
+

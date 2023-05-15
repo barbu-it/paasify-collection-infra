@@ -4,8 +4,10 @@ version: '3.9'
 services:
   dnsmasq:
     image: jpillora/dnsmasq:latest
+    entrypoint: webproc --config /etc/dnsmasq.d/main.conf -- dnsmasq --no-daemon --conf-dir /etc/dnsmasq.d
+    stop_grace_period: 2s
     volumes:
-      - $app_dir_conf/dnsmasq.conf:/etc/dnsmasq.conf
+      - $app_dir_conf/:/etc/dnsmasq.d
     environment:
       HTTP_USER: $app_admin_user
       HTTP_PASS: $app_admin_pass

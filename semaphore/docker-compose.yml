@@ -1,0 +1,63 @@
+---
+version: "3.9"
+
+networks:
+  backend:
+
+# See: https://docs.ansible-semaphore.com/administration-guide/installation#docker
+
+services:
+  semaphore:
+    #restart: unless-stopped
+      #ports:
+      #  - 3000:3000
+    image: semaphoreui/semaphore:latest
+    volumes:
+      - $app_dir_conf:/etc/semaphore
+      - $app_dir_data:/var/lib/semaphore # database.boltdb location (Not required if using mysql or postgres)
+    environment:
+      SEMAPHORE_DB_USER: $app_db_user
+      SEMAPHORE_DB_PASS: $app_db_pass
+      SEMAPHORE_DB_HOST: mysql #change to postgres for postgres
+      SEMAPHORE_DB_PORT: 3306 # change to 5432 for postgres
+      SEMAPHORE_DB_DIALECT: mysql
+      SEMAPHORE_DB: $app_db_name # change to semaphore?sslmode=disable for postgres
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+      SEMAPHORE_ADMIN_PASSWORD: $app_admin_pass
+      SEMAPHORE_ADMIN_NAME: admin
+      SEMAPHORE_ADMIN_EMAIL: admin@localhost
+      SEMAPHORE_ADMIN: admin
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: gs72mPntFATGJs9qK0pQ0rKtfidlexiMjYCH9gWKhTU=
+
+        # SEMAPHORE_LDAP_ACTIVATED: 'no' # set to yes if you wish to use ldap
+        # SEMAPHORE_LDAP_HOST: dc01.local.example.com
+        # SEMAPHORE_LDAP_PORT: '636'
+        # SEMAPHORE_LDAP_NEEDTLS: 'yes'
+        # SEMAPHORE_LDAP_DN_BIND: 'uid=bind_user,cn=users,cn=accounts,dc=local,dc=shiftsystems,dc=net'
+        # SEMAPHORE_LDAP_PASSWORD: 'ldap_bind_account_password'
+        # SEMAPHORE_LDAP_DN_SEARCH: 'dc=local,dc=example,dc=com'
+        # SEMAPHORE_LDAP_SEARCH_FILTER: "(\u0026(uid=%s)(memberOf=cn=ipausers,cn=groups,cn=accounts,dc=local,dc=example,dc=com))"
+
+    depends_on:
+      - mysql #change to postgres for postgres
+    networks:
+      backend:
+
+  mysql:
+    restart: unless-stopped
+      #ports:
+      #  - 3306:3306
+    image: mysql:8.0
+      #hostname: mysql
+    volumes:
+      - $app_dir_db_data:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: $app_db_name
+      MYSQL_USER: $app_db_user
+      MYSQL_PASSWORD: $app_db_pass
+    networks:
+      backend:
+
+        #volumes:
+        #  semaphore-mysql: #switch to semaphore-postgres to use postgres

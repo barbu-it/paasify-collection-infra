@@ -1,0 +1,128 @@
+# Example compose file for production deployment on Linux.
+#
+# Note: This file is meant to serve as a template. Please modify it
+# according to your needs. Read more about Docker Compose:
+#
+# https://docs.docker.com/compose/compose-file/
+#
+#
+x-deploy: &default-deploy
+  restart_policy:
+    condition: unless-stopped
+    delay: 5s
+    window: 120s
+  update_config:
+    order: start-first
+
+version: '3.7'
+
+networks:
+  firezone-network:
+    enable_ipv6: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+        - subnet: 2001:3990:3990::/64
+          gateway: 2001:3990:3990::1
+
+services:
+  #  caddy:
+  #    image: caddy:2
+  #    volumes:
+  #      - ${app_dir_template}/conf/caddy:/data/caddy
+  #    # See Caddy's documentation for customizing this line
+  #    # https://caddyserver.com/docs/quick-starts/reverse-proxy
+  #    command:
+  #      - /bin/sh
+  #      - -c
+  #      - |
+  #        cat <<EOF > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile
+  #
+  #        https:// {
+  #          log
+  #          reverse_proxy * 172.25.0.100:${PHOENIX_PORT:-13000}
+  #          ${TLS_OPTS:-}
+  #        }
+  #        EOF
+  #    network_mode: "host"
+  #    deploy:
+  #      <<: *default-deploy
+
+  firezone:
+    image: firezone/firezone:${VERSION:-latest}
+    ports:
+      #- ${WIREGUARD_PORT:-51820}:${WIREGUARD_PORT:-51820}/udp
+      - ${app_port_wg:-51820}:${app_port_wg:-51820}/udp
+    environment:
+      - VERSION=latest
+      - EXTERNAL_URL=${app_prot}://${app_fqdn}
+      - DEFAULT_ADMIN_EMAIL=$app_admin_email
+      - DEFAULT_ADMIN_PASSWORD=$app_admin_pass
+      - DATABASE_PASSWORD=${app_db_pass}
+      - WIREGUARD_PORT=${app_port_wg:-51820}
+      - LOCAL_AUTH_ENABLED=true
+      - RESET_ADMIN_ON_BOOT=true
+
+      - GUARDIAN_SECRET_KEY=Ull9MpU/jF8liByAMo9a/MFkc963gYdww6Pu12RqBTAfzOl4QU+YMJhp7+8k7fEt
+      - SECRET_KEY_BASE=wRVK7PM1PPodL+vi1Bxnqn/0bwuw10qcY8yuWQ5upF0rg47Ol+dY6ZlmxUnPDOLT
+      - LIVE_VIEW_SIGNING_SALT=DF1tVjdbYt+0NLcHDkTIhHjSwNSkdP4N
+      - COOKIE_SIGNING_SALT=taEEgMDH
+      - COOKIE_ENCRYPTION_SALT=FHCKccBF
+      - DATABASE_ENCRYPTION_KEY=DRxTyN6OexxQrYUt2cZJv8BzHEaq8oobOR9eMF4yrgk=
+      
+      # The ability to change the IPv4 and IPv6 address pool will be removed
+      # in a future Firezone release in order to reduce the possible combinations
+      # of network configurations we need to handle.
+      #
+      # Due to the above, we recommend not changing these unless absolutely
+      # necessary.
+      - WIREGUARD_IPV4_NETWORK=100.64.0.0/10
+      - WIREGUARD_IPV4_ADDRESS=100.64.0.1
+      - WIREGUARD_IPV6_NETWORK=fd00::/106
+      - WIREGUARD_IPV6_ADDRESS=fd00::1
+
+
+        #env_file:
+        #  # This should contain a list of env vars for configuring Firezone.
+        #  # See https://www.firezone.dev/docs/reference/env-vars for more info.
+        #  - ${FZ_INSTALL_DIR:-.}/.env
+    volumes:
+      # IMPORTANT: Persists WireGuard private key and other data. If
+      # /var/firezone/private_key exists when Firezone starts, it is
+      # used as the WireGuard private. Otherwise, one is generated.
+      - ${app_dir_data}:/var/firezone
+    cap_add:
+      # Needed for WireGuard and firewall support.
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      # Needed for masquerading and NAT.
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+    depends_on:
+      - postgres
+    networks:
+      firezone-network:
+        ipv4_address: 172.25.0.100
+        ipv6_address: 2001:3990:3990::99
+
+    deploy:
+      <<: *default-deploy
+
+  postgres:
+    image: postgres:15
+    volumes:
+      - $app_dir_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-firezone}
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${app_db_pass:?err}
+    networks:
+      - firezone-network
+    deploy:
+      <<: *default-deploy
+      update_config:
+        order: stop-first
+

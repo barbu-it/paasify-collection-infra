@@ -22,7 +22,7 @@ services:
 
 
       # DEBUG
-      - $app_dir_helpers:/helpers:ro
+      - $app_dir_template/helpers:/helpers:rw
       - $app_dir_debug:/helpers/debug:rw
     cap_add:
       - IPC_LOCK
