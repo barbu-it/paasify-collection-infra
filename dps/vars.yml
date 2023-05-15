@@ -1,0 +1,4 @@
+traefik_svc_port: "5380"
+homepage_icon: 
+app_description: Docker Proxy Server
+

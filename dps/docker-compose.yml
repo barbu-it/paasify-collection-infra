@@ -1,0 +1,23 @@
+---
+version: "3.9"
+
+
+    #    docker run --hostname dns.mageddo --restart=unless-stopped -d \
+    #  -p 5354:53/tcp \
+    #  -p 5354:53/udp \
+    #  -p 5380:5380 \
+    #  -v /var/run/docker.sock:/var/run/docker.sock \
+    #  defreitas/dns-proxy-server
+
+
+services:
+  dps:
+    image: defreitas/dns-proxy-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      MG_LOG_LEVEL: debug
+      MG_REGISTER_CONTAINER_NAMES: true
+      MG_DOMAIN: docker
+      MG_HOST_MACHINE_HOSTNAME: host.docker
+
