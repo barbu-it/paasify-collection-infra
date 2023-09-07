@@ -1,0 +1,74 @@
+version: "3"
+services:
+  #UI dashboard
+  dashboard:
+    image: wiretrustee/dashboard:latest
+      #ports:
+      #  - 80:80
+      #  - 443:443
+    environment:
+
+      # Authentik See: https://github.com/nolog-it/netbird-docs/blob/main/docs/integrations/identity-providers/self-hosted/authentik.md
+      # - NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT=https://authentik.example.org/application/o/netbird/.well-known/openid-configuration.
+      # - NETBIRD_AUTH_CLIENT_ID=e4fc50302f6d4029a13a2f2710fd4da9d98xxx
+      # - NETBIRD_AUTH_AUDIENCE=e4fc50302f6d4029a13a2f2710fd4da9d988xxx
+      # - AUTH_AUTHORITY=https://authentik.example.org/application/o/netbird # WIHTOUT TRAILING SLASH !!!!
+
+
+      - NETBIRD_DOMAIN=${app_fqdn}
+      - AUTH_SUPPORTED_SCOPES=openid profile email offline_access api
+        #- NETBIRD_MGMT_API_ENDPOINT=https://management
+        #- NETBIRD_MGMT_GRPC_API_ENDPOINT=https://management
+        #- NGINX_SSL_PORT=443
+        #- LETSENCRYPT_DOMAIN=$NETBIRD_DOMAIN
+        #- LETSENCRYPT_EMAIL=$NETBIRD_LETSENCRYPT_EMAIL
+        #- AUTH_REDIRECT_URI=$NETBIRD_AUTH_REDIRECT_URI
+        #- AUTH_SILENT_REDIRECT_URI=$NETBIRD_AUTH_SILENT_REDIRECT_URI
+        #volumes:
+        #  - $LETSENCRYPT_VOLUMENAME:/etc/letsencrypt/
+        #
+  # Signal
+  signal:
+    image: netbirdio/signal:latest
+    restart: unless-stopped
+    volumes:
+      - $app_dir_data/signal:/var/lib/netbird
+        #ports:
+        #  - 10000:80
+  #     # port and command for Let's Encrypt validation
+  #      - 443:443
+  #    command: ["--letsencrypt-domain", "$NETBIRD_DOMAIN", "--log-file", "console"]
+
+
+  # Management
+  management:
+    image: netbirdio/management:latest
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+    volumes:
+      - $app_dir_data/netbird:/var/lib/netbird
+      - $app_dir_conf/netbird:/etc/netbird/
+        #- $app_dir_conf/management.json:/etc/netbird/management.json
+        #ports:
+        #  - $NETBIRD_MGMT_API_PORT:443 #API port
+  #     # command for Let's Encrypt validation without dashboard container
+  #    command: ["--letsencrypt-domain", "$NETBIRD_DOMAIN", "--log-file", "console"]
+    command: ["--port", "443", "--log-file", "console", "--disable-anonymous-metrics=false", "--single-account-mode-domain=$app_fqdn", "--dns-domain=netbird.selfhosted"]
+
+
+  # Coturn
+  coturn:
+    image: coturn/coturn
+    restart: unless-stopped
+    domainname: $NETBIRD_DOMAIN
+    volumes:
+      - $app_dir_conf/coturn/:/srv:ro
+        #- $app_dir/conf/turnserver.conf:/etc/turnserver.conf:ro
+        #- $app_dir_conf/turnserver.conf:/etc/turnserver.conf:ro
+    #      - ./privkey.pem:/etc/coturn/private/privkey.pem:ro
+    #      - ./cert.pem:/etc/coturn/certs/cert.pem:ro
+    network_mode: host
+    command:
+      - -c /srv/turnserver.conf
+      
