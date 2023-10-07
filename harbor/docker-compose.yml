@@ -1,0 +1,257 @@
+version: '2.3'
+networks:
+  harbor:
+    external: false
+services:
+
+  proxy:
+    image: goharbor/nginx-photon:v2.7.3
+    container_name: nginx
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    volumes:
+      - $app_dir_template/config/nginx:/etc/nginx:z
+      - type: bind
+        source: $app_dir_template/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      - harbor
+        #ports:
+        #  - 80:8080
+    depends_on:
+      - registry
+      - core
+      - portal
+        #- log
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "proxy"
+        
+  #log:
+  #  image: goharbor/harbor-log:v2.7.3
+  #  container_name: harbor-log
+  #  restart: always
+  #  cap_drop:
+  #    - ALL
+  #  cap_add:
+  #    - CHOWN
+  #    - DAC_OVERRIDE
+  #    - SETGID
+  #    - SETUID
+  #  volumes:
+  #    - $app_dir_logs/syslog:/var/log/docker/:z
+  #    - type: bind
+  #      source: $app_dir_template/config/log/logrotate.conf
+  #      target: /etc/logrotate.d/logrotate.conf
+  #    - type: bind
+  #      source: $app_dir_template/config/log/rsyslog_docker.conf
+  #      target: /etc/rsyslog.d/rsyslog_docker.conf
+  #  ports:
+  #    - 127.0.0.1:1514:10514
+  #  networks:
+  #    - harbor
+  registry:
+    image: goharbor/registry-photon:v2.7.3
+    container_name: registry
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    volumes:
+      - $app_dir_data/registry:/storage:z
+      - $app_dir_template/config/registry/:/etc/registry/:z
+      - type: bind
+        source: /data/secret/registry/root.crt
+        target: /etc/registry/root.crt
+      - type: bind
+        source: $app_dir_template/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      - harbor
+        #depends_on:
+        #  - log
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "registry"
+  registryctl:
+    image: goharbor/harbor-registryctl:v2.7.3
+    container_name: registryctl
+    env_file:
+      - $app_dir_template/config/registryctl/env
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    volumes:
+      - $app_dir_data/registry:/storage:z
+      - $app_dir_template/config/registry/:/etc/registry/:z
+      - type: bind
+        source: $app_dir_template/config/registryctl/config.yml
+        target: /etc/registryctl/config.yml
+      - type: bind
+        source: $app_dir_template/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      - harbor
+        #depends_on:
+        #  - log
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "registryctl"
+  postgresql:
+    image: goharbor/harbor-db:v2.7.3
+    container_name: harbor-db
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    volumes:
+      - $app_dir_db_data/postgresql:/var/lib/postgresql/data:z
+    networks:
+      harbor:
+    env_file:
+      - $app_dir_template/config/db/env
+        #depends_on:
+        #  - log
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "postgresql"
+    shm_size: '1gb'
+  core:
+    image: goharbor/harbor-core:v2.7.3
+    container_name: harbor-core
+    env_file:
+      - $app_dir_template/config/core/env
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+    volumes:
+      - $app_dir_data/ca_download/:/etc/core/ca/:z
+      - $app_dir_data/core/:/data/:z
+      - $app_dir_template/config/core/certificates/:/etc/core/certificates/:z
+      - type: bind
+        source: $app_dir_template/config/core/app.conf
+        target: /etc/core/app.conf
+      - type: bind
+        source: /data/secret/core/private_key.pem
+        target: /etc/core/private_key.pem
+      - type: bind
+        source: /data/secret/keys/secretkey
+        target: /etc/core/key
+      - type: bind
+        source: $app_dir_template/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      harbor:
+    depends_on:
+      #- log
+      - registry
+      - redis
+      - postgresql
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "core"
+  portal:
+    image: goharbor/harbor-portal:v2.7.3
+    container_name: harbor-portal
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    volumes:
+      - type: bind
+        source: $app_dir_template/config/portal/nginx.conf
+        target: /etc/nginx/nginx.conf
+    networks:
+      - harbor
+        #depends_on:
+        #  - log
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "portal"
+
+  jobservice:
+    image: goharbor/harbor-jobservice:v2.7.3
+    container_name: harbor-jobservice
+    env_file:
+      - $app_dir_template/config/jobservice/env
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    volumes:
+      - $app_dir_logs/job_logs:/var/log/jobs:z
+      - type: bind
+        source: $app_dir_template/config/jobservice/config.yml
+        target: /etc/jobservice/config.yml
+      - type: bind
+        source: $app_dir_template/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    networks:
+      - harbor
+    depends_on:
+      - core
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "jobservice"
+  redis:
+    image: goharbor/redis-photon:v2.7.3
+    container_name: redis
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    volumes:
+      - $app_dir_db_data/redis:/var/lib/redis
+    networks:
+      harbor:
+        #depends_on:
+        #  - log
+        #logging:
+        #  driver: "syslog"
+        #  options:
+        #    syslog-address: "tcp://localhost:1514"
+        #    tag: "redis"
