@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+    registry:
+        image: registry:2.8
+        restart: always
+        volumes:
+            - $app_dir_data:/var/lib/registry
+        environment:
+            - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry
+              #- REGISTRY_HTTP_SECRET=$app_admin_pass
+            - REGISTRY_STORAGE_DELETE_ENABLED=true
+
+
