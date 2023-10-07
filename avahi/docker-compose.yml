@@ -5,6 +5,7 @@ networks:
 services:
   avahi:
     image: flungo/avahi
+    restart: unless-stopped
     volumes:
       - $app_dir_conf/hosts:/etc/avahi/hosts
       - $app_dir_conf/services:/etc/avahi/services

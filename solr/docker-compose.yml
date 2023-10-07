@@ -3,6 +3,7 @@ version: "3.7"
 services:
   solr:
     image: ${app_image}:${app_image_version}
+    restart: unless-stopped
     environment:
       - SOLR_PORT_NUMBER=$app_port
       - SOLR_SERVER_DIR=$solr_server_dir

@@ -6,6 +6,7 @@ services:
   pdns:
     #build: pdns
     image: pschiffe/pdns-mysql
+    restart: unless-stopped
       #depends_on:
       #  - db
       #links:

@@ -5,6 +5,7 @@ version: '3.4'
 services:
   samba:
     image: dperson/samba:latest
+    restart: unless-stopped
     mem_limit: 512m
     volumes:
       - $app_dir_conf:/etc/samba

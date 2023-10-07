@@ -4,6 +4,7 @@ services:
 
   lam:
     image: ${app_image_name:-ldapaccountmanager/lam}:${app_image_version:-8.1}
+    restart: unless-stopped
     #ports:
     #  - "9999:80"
 

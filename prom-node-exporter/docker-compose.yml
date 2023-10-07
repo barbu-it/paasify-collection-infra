@@ -9,6 +9,7 @@ services:
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
+    restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro

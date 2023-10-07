@@ -3,6 +3,7 @@ version: "3.3"
 services:
   wireguard:
     image: ghcr.io/linuxserver/wireguard
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_MODULE

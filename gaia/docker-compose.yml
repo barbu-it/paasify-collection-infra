@@ -2,11 +2,13 @@ version: "3.9"
 services:
   gaia:
     image: "gaiaapp/gaia"
+    restart: unless-stopped
     environment:
       - "GAIA_RUNNER_API_PASSWORD=$app_secret_token"
       - "GAIA_MONGODB_URI=mongodb://mongo/gaia"
   runner:
     image: "gaiaapp/runner"
+    restart: unless-stopped
     environment:
       - "GAIA_URL=http://gaia:8080"
       - "GAIA_RUNNER_API_PASSWORD=$app_secret_token"

@@ -8,6 +8,7 @@ version: "3.7"
 services:
   authelia:
     image: ${app_image_name:-authelia/authelia}:${app_image_version:-4.36}
+    restart: unless-stopped
     command:
       - authelia
       - "--config=/config/configuration.yml"

@@ -2,6 +2,7 @@ services:
 
   web:
     image: nginx:1.17
+    restart: unless-stopped
     depends_on:
       - php
     links:

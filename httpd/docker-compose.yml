@@ -3,6 +3,7 @@ version: '3'
 services:
  app:
    image: httpd:alpine
+    restart: unless-stopped
    volumes:
      - $app_dir_data:/usr/local/apache2/htdocs/
 

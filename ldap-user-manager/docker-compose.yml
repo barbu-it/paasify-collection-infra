@@ -4,6 +4,7 @@ services:
 
   lum:
     image: ${app_image_name:-wheelybird/ldap-user-manager}:${app_image_version:-v1.9}
+    restart: unless-stopped
     environment:
       - "SERVER_HOSTNAME=$app_fqdn"
       - "SERVER_PORT=${traefik_svc_port:-80}"

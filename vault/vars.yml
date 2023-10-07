@@ -6,3 +6,7 @@ traefik_svc_ident: vault
 app_port: 8200
 app_image_name: vault
 app_image_version: "1.12.0"
+
+
+  # Is it a good idea ?
+  # app_dir_conf: $app_dir_template

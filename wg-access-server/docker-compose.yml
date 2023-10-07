@@ -9,6 +9,7 @@ version: '3.7'
 services:
   wg-access-server:
     image: place1/wg-access-server
+    restart: unless-stopped
     command: >
       /usr/local/bin/wg-access-server 
       serve --config /config/config.yml 

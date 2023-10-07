@@ -4,6 +4,7 @@ version: '3.7'
 services:
   wireguard-ui:
     image: ngoduykhanh/wireguard-ui:latest
+    restart: unless-stopped
     environment:
       - SENDGRID_API_KEY
       - EMAIL_FROM_ADDRESS

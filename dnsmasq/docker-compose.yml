@@ -3,6 +3,7 @@ version: '3.9'
 services:
   dnsmasq:
     image: drpsychick/dnsmasq:latest
+    restart: unless-stopped
     environment: {}
       # See doc: https://github.com/DrPsychick/docker-dnsmasq
 

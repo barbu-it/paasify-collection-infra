@@ -5,6 +5,7 @@ version: "3.8"
 services:
   vault:
     image: "${app_image_name:-vault}:${app_image_version:-1.12.0}"
+    restart: unless-stopped
     environment:
       VAULT_ADDR: "http://0.0.0.0:${app_port:-8200}"
       VAULT_API_ADDR: "http://0.0.0.0:${app_port:-8200}"

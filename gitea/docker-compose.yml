@@ -4,6 +4,7 @@ version: '3.9'
 services:
   gitea:
     image: "${app_image:-gitea/gitea}:${app_image_version:-1.16}"
+    restart: unless-stopped
     environment:
       # https://docs.gitea.io/en-us/config-cheat-sheet/
       # https://docs.gitea.io/en-us/install-with-docker/#environments-variables

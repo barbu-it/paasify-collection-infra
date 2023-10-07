@@ -3,6 +3,7 @@ version: "3.7"
 services:
   node:
     image: ${app_image}:${app_image_version}
+    restart: unless-stopped
     environment:
       - TZ=$app_tz
       - NODE_ENV=$node_env

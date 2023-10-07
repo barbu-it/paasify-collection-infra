@@ -3,6 +3,7 @@ version: '3'
 services:
   web:
     image: php:5.4-apache
+    restart: unless-stopped
     environment:
         - TIMEZONE=$app_tz
         - PHP_EXT=pdo_mysql

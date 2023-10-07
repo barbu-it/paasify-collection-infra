@@ -8,6 +8,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.36.2
+    restart: unless-stopped
     volumes:
       - $app_dir_conf:/etc/prometheus/
       - $app_dir_data:/prometheus

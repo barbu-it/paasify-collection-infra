@@ -2,6 +2,7 @@
 services:
   authentik-proxy:
     image: ghcr.io/goauthentik/proxy
+    restart: unless-stopped
       #ports:
       #    - 4180:4180
       #    - 4443:4443

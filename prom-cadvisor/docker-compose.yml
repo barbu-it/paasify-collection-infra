@@ -8,6 +8,7 @@ networks:
 services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
+    restart: unless-stopped
       #hostname: cadvisor
       #
     command:

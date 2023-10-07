@@ -4,5 +4,6 @@ version: '3'
 services:
   vaultwarden:
     image: "${app_image_name:-vaultwarden/server}:${app_image_version:-latest}"
+    restart: unless-stopped
     volumes:
       - $app_dir_data/:/data/

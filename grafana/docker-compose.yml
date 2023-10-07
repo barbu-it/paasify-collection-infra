@@ -9,6 +9,7 @@ services:
 
   grafana:
     image: grafana/grafana
+    restart: unless-stopped
     user: "472"
       #ports:
       #  - 3000:3000

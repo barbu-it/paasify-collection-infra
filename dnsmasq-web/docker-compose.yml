@@ -4,6 +4,7 @@ version: '3.9'
 services:
   dnsmasq:
     image: jpillora/dnsmasq:latest
+    restart: unless-stopped
     entrypoint: webproc --config /etc/dnsmasq.d/main.conf -- dnsmasq --no-daemon --conf-dir /etc/dnsmasq.d
     stop_grace_period: 2s
     volumes:
