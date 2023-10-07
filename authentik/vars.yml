@@ -1,3 +1,7 @@
+app_image: 'ghcr.io/goauthentik/server'
+app_image_version: '2023.8'
+
+
 app_port: "9000"
   #traefik_svc_port: "9000"
 
