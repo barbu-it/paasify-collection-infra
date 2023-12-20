@@ -1,0 +1,7 @@
+
+services:
+  dnsmasq:
+    ports:
+      - $app_expose_ip:$app_expose_port:53/tcp
+      - $app_expose_ip:$app_expose_port:53/udp
+

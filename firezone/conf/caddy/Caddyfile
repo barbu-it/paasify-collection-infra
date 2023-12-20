@@ -1,0 +1,16 @@
+:80 {
+  log
+
+  reverse_proxy * firezone-server:13000
+
+  #encode gzip
+
+  #tls internal
+}
+
+#:80 {
+#  handle /hello {
+#    respond "HELLO
+#"
+#  }
+#}
