@@ -23,8 +23,8 @@ services:
     volumes:
       - $app_dir_conf/media:/media
       - $app_dir_conf/custom-templates:/templates
-        #env_file:
-        #  - .env
+    #env_file:
+    #  - $app_dir_conf/env
         #ports:
         #  - "${COMPOSE_PORT_HTTP:-9000}:9000"
         #  - "${COMPOSE_PORT_HTTPS:-9443}:9443"
@@ -60,8 +60,8 @@ services:
       - $app_dir_conf/media:/media
       - $app_dir_conf/certs:/certs
       - $app_dir_conf/custom-templates:/templates
-        #env_file:
-        #  - .env
+    #env_file:
+    #  - .env
     depends_on:
       - postgresql
       - redis
@@ -82,8 +82,8 @@ services:
       POSTGRES_USER: ${app_db_user:-authentik}
       POSTGRES_DB: ${app_db_name:-authentik}
       AUTHENTIK_SECRET_KEY: $app_token
-        #env_file:
-        #  - .env
+    #env_file:
+    #  - $app_dir_conf/env
   redis:
     image: docker.io/library/redis:alpine
     command: --save 60 1 --loglevel warning

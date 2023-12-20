@@ -12,7 +12,7 @@ services:
       - PGID=1000
       - TZ=$app_tz
       - SERVERURL=$app_fqdn
-      - SERVERPORT=$app_port
+      - SERVERPORT=${app_expose_port:-$app_port}
       - PEERS=$wg_peers
       - PEERDNS=$wg_peerdns
       - INTERNAL_SUBNET=$wg_internal_subnet

@@ -1,7 +1,7 @@
 app_port: 51820
 app_desc: VPN
 
-app_expose_port: 51820
+app_expose_port: $app_port
 app_expose_prot: udp
 
 wg_peers: user1,user2,user3

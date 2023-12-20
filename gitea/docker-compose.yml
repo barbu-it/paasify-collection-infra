@@ -17,7 +17,7 @@ services:
       - GITEA__server__HTTP_PORT=$traefik_svc_port
 
       - GITEA__server__DOMAIN=$app_fqdn
-      - GITEA__server__SSH_DOMAIN=$app_domain
+      - GITEA__server__SSH_DOMAIN=$app_fqdn
       - GITEA__server__ROOT_URL=https://$app_fqdn
       # - GITEA__service__EMAIL_DOMAIN_WHITELIST=$app_domain
     labels:
