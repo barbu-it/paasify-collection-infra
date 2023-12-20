@@ -1,0 +1,26 @@
+
+networks:
+  mail:
+    external: true
+    name: $net_mail
+
+services:
+  authelia:
+    environment:
+      
+      AUTHELIA_NOTIFIER_SMTP_HOST: "${app_smtp_host}"
+      AUTHELIA_NOTIFIER_SMTP_PORT: "${app_smtp_port}"
+      AUTHELIA_NOTIFIER_SMTP_TIMEOUT: "${app_smtp_timeout}"
+      AUTHELIA_NOTIFIER_SMTP_USERNAME: "${app_smtp_user}"
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD: "${app_smtp_pass}"
+
+      AUTHELIA_NOTIFIER_SMTP_IDENTIFIER: "${app_smtp_identifier}"
+      AUTHELIA_NOTIFIER_SMTP_SENDER: "${app_smtp_sender}"
+      AUTHELIA_NOTIFIER_SMTP_SUBJECT: "${app_smtp_subject}"
+      AUTHELIA_NOTIFIER_SMTP_TLS_SKIP_VERIFY: "${app_smtp_tls_skip_verify}"
+      AUTHELIA_NOTIFIER_SMTP_TLS_SERVER_NAME: "${app_smtp_tls_server_name}"
+      AUTHELIA_NOTIFIER_SMTP_DISABLE_STARTTLS: "${app_smtp_disable_starttls}"
+
+
+    networks:
+      mail:

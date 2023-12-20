@@ -1,1 +1,6 @@
-traefik_svc_port: "8080"
+traefik_svc_port: "8000"
+app_image_name: lscr.io/linuxserver/netbox
+app_image_version: latest
+
+
+  #  netboxcommunity/netbox:${VERSION-v3.4-2.4.0}

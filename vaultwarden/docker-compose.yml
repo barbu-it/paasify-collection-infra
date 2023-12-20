@@ -1,4 +1,5 @@
 
+# See: https://github.com/dani-garcia/vaultwarden/wiki/Disable-registration-of-new-users
 version: '3'
 
 services:

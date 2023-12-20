@@ -1,103 +1,59 @@
-version: '3.4'
-
-networks:
-  db:
-
+version: "3.7"
 services:
-  netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-v3.4-2.4.0}
+  netbox:
+    image: ${app_image:-${app_image_name}:${app_image_version}}
+    environment:
+      - PUID=$app_puid
+      - PGID=$app_pgid
+      - TZ=$app_tz
+      - SUPERUSER_EMAIL=${app_admin_email}
+      - SUPERUSER_PASSWORD=${app_admin_pass}
+      - ALLOWED_HOST=${app_fqdn}
+      - DB_NAME=${app_db_name}
+      - DB_USER=${app_db_user}
+      - DB_PASSWORD=${app_db_pass}
+      - DB_HOST=netbox-db
+      - DB_PORT=5432
+      - REDIS_HOST=netbox-redis
+      - REDIS_PORT=6379
+      #- REDIS_PASSWORD=<REDIS_PASSWORD>
+      - REDIS_DB_TASK=0 # Database ID for tasks
+      - REDIS_DB_CACHE=1 # Database ID for cache
+      #- BASE_PATH=<BASE_PATH> #optional
+      #- REMOTE_AUTH_ENABLED=<REMOTE_AUTH_ENABLED> #optional
+      #- REMOTE_AUTH_BACKEND=<REMOTE_AUTH_BACKEND> #optional
+      #- REMOTE_AUTH_HEADER=<REMOTE_AUTH_HEADER> #optional
+      #- REMOTE_AUTH_AUTO_CREATE_USER=<REMOTE_AUTH_AUTO_CREATE_USER> #optional
+      #- REMOTE_AUTH_DEFAULT_GROUPS=<REMOTE_AUTH_DEFAULT_GROUPS> #optional
+      #- REMOTE_AUTH_DEFAULT_PERMISSIONS=<REMOTE_AUTH_DEFAULT_PERMISSIONS> #optional
+    volumes:
+      #- ./netbox_config:/config
+      - $app_dir_conf:/etc/netbox/config
+      - $app_dir_template/scripts:/etc/netbox/scripts:z,ro
+      
+      - $app_conf/reports:/etc/netbox/reports
+      - $app_dir_media:/opt/netbox/netbox/media:z
+        #ports:
+        #  - 13031:8000
+    depends_on:
+      - netbox-db
+      - netbox-redis
     restart: unless-stopped
-    depends_on:
-    - postgres
-    - redis
-    - redis-cache
-    env_file: $app_dir_template/env/netbox.env
-    networks:
-      db:
-    user: 'unit:root'
-    healthcheck:
-      start_period: 360s  # initial script installation time, should be live patched by paasify at install time
-      timeout: 3s
-      interval: 15s
-      test: "curl -f http://localhost:8080/api/ || exit 1"
-    volumes:
-    # This need to be copied, not cloud ready :(
-    #- $app_dir_template/configuration:/etc/netbox/config:z,ro
-    - $app_dir_conf:/etc/netbox/config:z,ro
-    - $app_dir_template/scripts:/etc/netbox/scripts:z,ro
 
-    - $app_conf/reports:/etc/netbox/reports:z,ro
-    - $app_dir_media:/opt/netbox/netbox/media:z
-  netbox-worker:
-    <<: *netbox
-    depends_on:
-      netbox:
-        condition: service_healthy
-    networks:
-      db:
-    command:
-    - /opt/netbox/venv/bin/python
-    - /opt/netbox/netbox/manage.py
-    - rqworker
-    healthcheck:
-      start_period: 20s
-      timeout: 3s
-      interval: 15s
-      test: "ps -aux | grep -v grep | grep -q rqworker || exit 1"
-  netbox-housekeeping:
-    <<: *netbox
-    depends_on:
-      netbox:
-        condition: service_healthy
-    networks:
-      db:
-    command:
-    - /opt/netbox/housekeeping.sh
-    healthcheck:
-      start_period: 20s
-      timeout: 3s
-      interval: 15s
-      test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
-
-  # postgres
-  postgres:
+  netbox-db:
     image: postgres:15-alpine
-    env_file: $app_dir_template/env/postgres.env
-    networks:
-      db:
+    restart: unless-stopped
     volumes:
-    - $app_dir_root/postgres_data:/var/lib/postgresql/data
-
-  # redis
-  redis:
+      - $app_dir_root/postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${app_db_pass}
+      - POSTGRES_DB=${app_db_name}
+      - POSTGRES_USER=${app_db_user}
+  netbox-redis:
     image: redis:7-alpine
-    command:
-    - sh
-    - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    env_file: $app_dir_template/env/redis.env
-    networks:
-      db:
+    user: 1000:1000
+    command: redis-server
+    restart: always
     volumes:
-    - $app_dir_root/redis_data:/data
-  redis-cache:
-    image: redis:7-alpine
-    command:
-    - sh
-    - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    env_file: $app_dir_template/env/redis-cache.env
-    networks:
-      db:
-    volumes:
-    - $app_dir_root/redis_cache:/data
+      - $app_dir_root/redis_data:/data
 
-      #volumes:
-      #  netbox-media-files:
-      #    driver: local
-      #  netbox-postgres-data:
-      #    driver: local
-      #  netbox-redis-data:
-      #    driver: local
-      #  netbox-redis-cache-data:
-      #    driver: local

@@ -6,10 +6,27 @@ networks:
 
 services:
   authelia:
-    command:
-      - authelia
-      - "--config=/config/configuration.yml"
-      - "--config=/config/configuration.ldap.yml"
-      - "--config=/config/configuration.local.yml"
+    environment:
+      # AUTHELIA_AUTHENTICATION_BACKEND_LDAP_URL: ldap://lldap:3890
+      # AUTHELIA_AUTHENTICATION_BACKEND_LDAP_BASE_DN: dc=example,dc=com  # must be identical to what is configured in lldap
+      # AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USER: uid=admin,ou=people,dc=example,dc=com  # must be the DN of your admin configured in lldap
+
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_IMPLEMENTATION: custom
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_URL: $ldap_uri
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_BASE_DN: $ldap_base_dn
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USER: $ldap_admin_bind_dn
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD: $ldap_admin_bind_pass
+
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_START_TLS: "false"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USERNAME_ATTRIBUTE: "uid"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_ADDITIONAL_USERS_DN: "ou=people"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USERS_FILTER: "(&({username_attribute}={input})(objectClass=person))"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_ADDITIONAL_GROUPS_DN: "ou=groups"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_GROUPS_FILTER: "(member={dn})"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_GROUP_NAME_ATTRIBUTE:  "cn"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_MAIL_ATTRIBUTE: "mail"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_DISPLAY_NAME_ATTRIBUTE: "displayName"
+
+
     networks:
       ldap:

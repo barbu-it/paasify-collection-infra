@@ -2,7 +2,8 @@ version: "3.9"
 
 networks:
   ldap:
-    name: ${app_network_name:-ldap}
+    name: ${net_ldap:-ldap}
+      #name: ${app_network_name:-ldap}
 
 services:
   openldap:
