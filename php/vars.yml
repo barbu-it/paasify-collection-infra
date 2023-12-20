@@ -1,0 +1,6 @@
+app_port: 80
+app_desc: Simple WebServer powered by PHP.
+
+app_image_variant: apache-bullseye
+app_php_ext: 
+app_php_version: 8.3.0
