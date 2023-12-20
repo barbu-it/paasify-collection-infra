@@ -4,6 +4,12 @@ version: '3'
 services:
   vaultwarden:
     image: "${app_image_name:-vaultwarden/server}:${app_image_version:-latest}"
+    environment:
+      SIGNUPS_ALLOWED: "${app_user_signup:-false}"
+      SIGNUPS_VERIFY: "${app_user_signup_verify:-false}"
+      SIGNUPS_DOMAINS_WHITELIST: "${app_user_signup_domains:-}"
+      ADMIN_TOKEN: "${app_admin_token:-}"
+      DOMAIN: "${app_prot}://${app_fqdn}"  # Your domain; vaultwarden needs to know it's https to work properly with attachments
     restart: unless-stopped
     volumes:
       - $app_dir_data/:/data/

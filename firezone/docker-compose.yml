@@ -4,56 +4,50 @@
 # according to your needs. Read more about Docker Compose:
 #
 # https://docs.docker.com/compose/compose-file/
-#
-#
-x-deploy: &default-deploy
-  restart_policy:
-    condition: unless-stopped
-    delay: 5s
-    window: 120s
-  update_config:
-    order: start-first
+
+
+#x-deploy: &default-deploy
+#  restart_policy:
+#    condition: unless-stopped
+#    delay: 5s
+#    window: 120s
+#  update_config:
+#    order: start-first
 
 version: '3.7'
 
 networks:
-  firezone-network:
-    enable_ipv6: true
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.25.0.0/16
-        - subnet: 2001:3990:3990::/64
-          gateway: 2001:3990:3990::1
+  db:
+  default:
+    #enable_ipv6: true
+    #driver: bridge
+    #ipam:
+    #  config:
+    #    - subnet: 172.25.0.0/16
+    #    - subnet: 2001:3990:3990::/64
+    #      gateway: 2001:3990:3990::1
 
 services:
-  #  caddy:
-  #    image: caddy:2
-  #    volumes:
-  #      - ${app_dir_template}/conf/caddy:/data/caddy
-  #    # See Caddy's documentation for customizing this line
-  #    # https://caddyserver.com/docs/quick-starts/reverse-proxy
-  #    command:
-  #      - /bin/sh
-  #      - -c
-  #      - |
-  #        cat <<EOF > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile
-  #
-  #        https:// {
-  #          log
-  #          reverse_proxy * 172.25.0.100:${PHOENIX_PORT:-13000}
-  #          ${TLS_OPTS:-}
-  #        }
-  #        EOF
-  #    network_mode: "host"
-  #    deploy:
-  #      <<: *default-deploy
+
+  #tinyproxy:
+  #  image: vimagick/tinyproxy
+  #  volumes:
+  #    - $app_dir_template/conf/tinyproxy:/etc/tinyproxy
+
+
+  caddy:
+    image: caddy
+    volumes:
+      - $app_dir_template/conf/caddy:/etc/caddy
+    networks:
+      default:
 
   firezone:
     image: firezone/firezone:${VERSION:-latest}
     ports:
       #- ${WIREGUARD_PORT:-51820}:${WIREGUARD_PORT:-51820}/udp
-      - ${app_port_wg:-51820}:${app_port_wg:-51820}/udp
+      - ${app_expose_ip_wg}:${app_expose_port_wg:-51820}:${app_port_wg:-51820}/udp
+      #- ${app_expose_ip}:${app_expose_port:-80}:80
     environment:
       - VERSION=latest
       - EXTERNAL_URL=${app_prot}://${app_fqdn}
@@ -81,16 +75,7 @@ services:
       - WIREGUARD_IPV4_ADDRESS=100.64.0.1
       - WIREGUARD_IPV6_NETWORK=fd00::/106
       - WIREGUARD_IPV6_ADDRESS=fd00::1
-
-
-        #env_file:
-        #  # This should contain a list of env vars for configuring Firezone.
-        #  # See https://www.firezone.dev/docs/reference/env-vars for more info.
-        #  - ${FZ_INSTALL_DIR:-.}/.env
     volumes:
-      # IMPORTANT: Persists WireGuard private key and other data. If
-      # /var/firezone/private_key exists when Firezone starts, it is
-      # used as the WireGuard private. Otherwise, one is generated.
       - ${app_dir_data}:/var/firezone
     cap_add:
       # Needed for WireGuard and firewall support.
@@ -104,12 +89,15 @@ services:
     depends_on:
       - postgres
     networks:
-      firezone-network:
-        ipv4_address: 172.25.0.100
-        ipv6_address: 2001:3990:3990::99
+      db:
+      default:
+        aliases:
+          - firezone-server
+        #ipv4_address: 172.25.0.100
+        #ipv6_address: 2001:3990:3990::99
 
-    deploy:
-      <<: *default-deploy
+    #deploy:
+    #  <<: *default-deploy
 
   postgres:
     image: postgres:15
@@ -120,9 +108,9 @@ services:
       POSTGRES_USER: ${DATABASE_USER:-postgres}
       POSTGRES_PASSWORD: ${app_db_pass:?err}
     networks:
-      - firezone-network
-    deploy:
-      <<: *default-deploy
-      update_config:
-        order: stop-first
+      - db
+    #deploy:
+    #  <<: *default-deploy
+    #  update_config:
+    #    order: stop-first
 
